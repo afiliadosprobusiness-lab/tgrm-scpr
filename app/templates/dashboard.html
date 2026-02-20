@@ -1,5 +1,5 @@
 ﻿<!doctype html>
-<html lang="es" data-theme="ocean">
+<html lang="es" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -22,23 +22,8 @@
         <button type="button" class="platform-link" data-platform="google_maps" data-i18n="navGoogleMaps">
           Google Maps
         </button>
-        <button type="button" class="platform-link" data-platform="openstreetmap" data-i18n="navOpenStreetMap">
-          OpenStreetMap
-        </button>
         <button type="button" class="platform-link" data-platform="reddit" data-i18n="navReddit">
           Reddit
-        </button>
-        <button type="button" class="platform-link" data-platform="foursquare" data-i18n="navFoursquare">
-          Foursquare
-        </button>
-        <button type="button" class="platform-link" data-platform="yelp" data-i18n="navYelp">
-          Yelp
-        </button>
-        <button type="button" class="platform-link" data-platform="tomtom" data-i18n="navTomTom">
-          TomTom
-        </button>
-        <button type="button" class="platform-link" data-platform="opencorporates" data-i18n="navOpenCorporates">
-          OpenCorporates
         </button>
       </nav>
     </header>
@@ -64,9 +49,8 @@
             <div class="toolbar-field">
               <label for="themeSwitcher" data-i18n="themeLabel">Color</label>
               <select id="themeSwitcher" aria-label="Theme">
-                <option value="ocean" data-i18n="themeOcean">Oceano</option>
-                <option value="amber" data-i18n="themeAmber">Ambar</option>
-                <option value="graphite" data-i18n="themeGraphite">Grafito</option>
+                <option value="light" data-i18n="themeLight">Claro</option>
+                <option value="dark" data-i18n="themeDark">Oscuro</option>
               </select>
             </div>
           </div>
@@ -307,15 +291,6 @@
         </article>
       </section>
 
-      <section class="platform-panel" data-platform="openstreetmap" hidden>
-        <article class="card integration-card">
-          <h2 data-i18n="integrationTitle">Discovery Status</h2>
-          <p data-i18n="osmActiveHint">
-            OpenStreetMap discovery is active via Nominatim and Overpass.
-          </p>
-        </article>
-      </section>
-
       <section class="platform-panel" data-platform="reddit" hidden>
         <article class="card integration-card">
           <h2 data-i18n="integrationTitle">Discovery Status</h2>
@@ -323,151 +298,6 @@
             Reddit discovery is active via public JSON endpoints.
           </p>
         </article>
-      </section>
-
-      <section class="platform-panel" data-platform="foursquare" hidden>
-        <article class="card integration-card">
-          <h2 data-i18n="integrationTitle">Discovery Status</h2>
-          <p data-i18n="foursquareActiveHint">
-            Foursquare discovery is active via Places API.
-          </p>
-        </article>
-      </section>
-
-      <section class="platform-panel" data-platform="yelp" hidden>
-        <article class="card integration-card">
-          <h2 data-i18n="integrationTitle">Discovery Status</h2>
-          <p data-i18n="yelpActiveHint">
-            Yelp discovery is active via official Fusion API.
-          </p>
-        </article>
-      </section>
-
-      <section class="platform-panel" data-platform="tomtom" hidden>
-        <article class="card integration-card">
-          <h2 data-i18n="integrationTitle">Discovery Status</h2>
-          <p data-i18n="tomtomActiveHint">
-            TomTom discovery is active via Search API.
-          </p>
-        </article>
-      </section>
-
-      <section class="platform-panel" data-platform="opencorporates" hidden>
-        <article class="card integration-card">
-          <h2 data-i18n="integrationTitle">Discovery Status</h2>
-          <p data-i18n="opencorporatesActiveHint">
-            OpenCorporates discovery is active via public company registry API.
-          </p>
-        </article>
-      </section>
-
-      <section class="card">
-        <h2 data-i18n="manualTitle">Quick Manual</h2>
-        <ol class="manual-list">
-          <li data-i18n="manualStep1">Set your credentials in `.env`.</li>
-          <li data-i18n="manualStep2">Define `targets` in `config.json`.</li>
-          <li data-i18n="manualStep3">Run `Dry-run` first to validate access.</li>
-          <li data-i18n="manualStep4">Use incremental scrape for normal operations.</li>
-          <li data-i18n="manualStep5">Use backfill only for initial historical loads.</li>
-          <li data-i18n="manualStep6">Export CSV/JSON for external analysis.</li>
-        </ol>
-        <a class="manual-link" href="/manual" target="_blank" rel="noopener" data-i18n="manualOpenLink">
-          Open full manual
-        </a>
-      </section>
-
-      <section class="grid">
-        <article class="card">
-          <h2 data-i18n="configuredTargetsTitle">Configured Targets</h2>
-          {% if config_error %}
-          <p class="small error-text">{{ config_error }}</p>
-          {% elif not config_targets %}
-          <p class="small" data-i18n="noTargetsConfigured">No targets configured.</p>
-          {% else %}
-          <ul class="list">
-            {% for target in config_targets %}
-            <li>{{ target }}</li>
-            {% endfor %}
-          </ul>
-          {% endif %}
-        </article>
-
-        <article class="card">
-          <h2 data-i18n="pathsTitle">Paths</h2>
-          <ul class="list mono">
-            <li>DB: {{ db_path }}</li>
-            <li>Config: {{ config_path }}</li>
-            <li>Env: {{ env_path }}</li>
-          </ul>
-        </article>
-      </section>
-
-      <section class="card">
-        <h2 data-i18n="targetsStatsTitle">Targets Stats</h2>
-        {% if not target_rows %}
-        <p class="small" data-i18n="noTargetData">No target data yet.</p>
-        {% else %}
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th data-i18n="tableTarget">Target</th>
-                <th data-i18n="tableTargetId">Target ID</th>
-                <th data-i18n="tableMessages">Messages</th>
-                <th data-i18n="tableLastMessageId">Last Message ID</th>
-                <th data-i18n="tableLastScrapedAt">Last Scraped At</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for row in target_rows %}
-              <tr>
-                <td>{{ row.target_username or row.title or row.target_input }}</td>
-                <td>{{ row.target_id }}</td>
-                <td>{{ row.total_messages }}</td>
-                <td>{{ row.last_message_id or 0 }}</td>
-                <td>{{ row.last_scraped_at or "never" }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        {% endif %}
-      </section>
-
-      <section class="card">
-        <h2 data-i18n="recentRunsTitle">Recent Runs</h2>
-        {% if not recent_runs %}
-        <p class="small" data-i18n="noRunsRegistered">No runs registered.</p>
-        {% else %}
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th data-i18n="tableMode">Mode</th>
-                <th data-i18n="tableTargetFilter">Target Filter</th>
-                <th data-i18n="tableTargetsOk">Targets OK</th>
-                <th data-i18n="tableMessagesNew">Messages New</th>
-                <th data-i18n="tableFloodWaits">Flood Waits</th>
-                <th data-i18n="tableFinished">Finished</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for run in recent_runs %}
-              <tr>
-                <td>{{ run.id }}</td>
-                <td>{{ run.mode }}</td>
-                <td>{{ run.target_filter or "-" }}</td>
-                <td>{{ run.targets_ok }}/{{ run.targets_total }}</td>
-                <td>{{ run.messages_new }}</td>
-                <td>{{ run.flood_waits }}</td>
-                <td>{{ run.finished_at }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        {% endif %}
       </section>
     </main>
     <script src="{{ url_for('static', filename='dashboard.js') }}"></script>

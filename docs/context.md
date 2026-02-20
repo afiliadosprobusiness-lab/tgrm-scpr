@@ -11,8 +11,8 @@
 - `app/config.py`: env + JSON config loading and validation
 - `app/telegram_client.py`: Telethon user-session client and target resolution
 - `app/scraper.py`: incremental/backfill scraping, FloodWait handling, retries/backoff
-- `app/discovery.py`: source discovery orchestration for non-Telegram connectors
-- `app/sources/*`: adapters for Google Maps, OpenStreetMap, Reddit, Foursquare, Yelp, TomTom and OpenCorporates
+- `app/discovery.py`: source discovery orchestration for non-Telegram connectors (Google Maps and Reddit)
+- `app/sources/*`: adapters for Google Maps and Reddit (Telegram uses dedicated scraper workflow)
 - `app/sources/capabilities.py`: capability matrix used by API and UI for per-source filter behavior
 - `app/storage.py`: SQLite schema and persistence
 - `app/exporters.py`: export from SQLite to CSV/JSON
@@ -36,7 +36,7 @@
 - `scrape_runs`:
   - execution summary and operational metrics
 - `source_records`:
-  - normalized records from discovery sources (`google_maps`, `openstreetmap`, `reddit`, `foursquare`, `yelp`, `tomtom`, `opencorporates`)
+  - normalized records from discovery sources (`google_maps`, `reddit`)
 - `discovery_runs`:
   - execution summary for discovery filters and results
 
@@ -62,13 +62,9 @@
   - `TELEGRAM_API_ID` (required)
   - `TELEGRAM_API_HASH` (required)
   - `TELEGRAM_SESSION_NAME` (optional)
+  - `TELEGRAM_STRING_SESSION` (optional, recommended for serverless/web non-interactive Telegram auth)
   - `GOOGLE_MAPS_API_KEY` (required for Google Maps discovery)
-  - `FOURSQUARE_API_KEY` (required for Foursquare discovery)
-  - `YELP_API_KEY` (required for Yelp discovery)
-  - `TOMTOM_API_KEY` (required for TomTom discovery)
-  - `OPENCORPORATES_API_TOKEN` (required for OpenCorporates discovery)
   - `REDDIT_USER_AGENT` (recommended for Reddit discovery requests)
-  - `OSM_USER_AGENT` (recommended for OpenStreetMap/Nominatim polite usage)
   - `FLASK_SECRET_KEY` (recommended for web UI)
   - `SCRAPER_DB_PATH` (optional path override)
   - `SCRAPER_CONFIG_PATH` (optional path override)
@@ -108,17 +104,12 @@
 - Responsive top navbar with source selection:
   - `telegram`
   - `google_maps`
-  - `openstreetmap`
   - `reddit`
-  - `foursquare`
-  - `yelp`
-  - `tomtom`
-  - `opencorporates`
 - Source-level filter builder:
   - search, niche, has website, has phone, location, rating, verified
 - Filter summary preview in UI for selected source.
 - Theme switch in dashboard:
-  - `ocean`, `amber`, `graphite`
+  - `light`, `dark`
 - Language switch in dashboard:
   - `es`, `en`
 - Both preferences persist in browser `localStorage`.
@@ -126,10 +117,4 @@
 - Active source connectors:
   - `telegram` (scrape workflow)
   - `google_maps` (discovery via Google Places API)
-  - `openstreetmap` (discovery via Nominatim + Overpass)
   - `reddit` (discovery via public JSON endpoints)
-  - `foursquare` (discovery via Places API)
-  - `yelp` (discovery via Fusion API)
-  - `tomtom` (discovery via Search API)
-  - `opencorporates` (discovery via company registry API)
-- `instagram` and `linkedin` sources are intentionally disabled due platform policy risk for automated scraping.

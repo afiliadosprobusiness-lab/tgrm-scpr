@@ -71,13 +71,19 @@ def create_app(
 
     @app.get("/")
     def dashboard():
-        return render_template("dashboard.html", **_build_dashboard_view(app))
+        return render_template(
+            "dashboard.html",
+            **_build_dashboard_view(app),
+            scrape_summary=None,
+            scrape_error=None,
+        )
 
     @app.post("/scrape")
     def run_scrape():
         target = (request.form.get("target") or "").strip() or None
         backfill = bool(request.form.get("backfill"))
         dry_run = bool(request.form.get("dry_run"))
+        dashboard_data = _build_dashboard_view(app)
 
         try:
             summary = asyncio.run(
@@ -90,14 +96,14 @@ def create_app(
             )
             return render_template(
                 "dashboard.html",
-                **_build_dashboard_view(app),
+                **dashboard_data,
                 scrape_summary=summary,
                 scrape_error=None,
             )
         except Exception as exc:
             return render_template(
                 "dashboard.html",
-                **_build_dashboard_view(app),
+                **dashboard_data,
                 scrape_summary=None,
                 scrape_error=str(exc),
             )
@@ -267,8 +273,6 @@ def _build_dashboard_view(app: Flask) -> dict[str, Any]:
         "recent_runs": runs,
         "total_targets": len(target_rows),
         "total_messages": total_messages,
-        "scrape_summary": None,
-        "scrape_error": None,
     }
 
 
@@ -295,7 +299,7 @@ async def _execute_scrape(
     storage = _open_storage(app)
     client_manager = TelegramClientManager(telegram_settings)
     try:
-        await client_manager.connect()
+        await client_manager.connect(allow_interactive=False)
         scraper = TelegramScraper(
             client_manager=client_manager,
             storage=storage,

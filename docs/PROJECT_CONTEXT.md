@@ -25,8 +25,8 @@ Operational summary for the Telegram scraper.
 
 ## UX controls
 - Language switch (`es` / `en`) with browser persistence.
-- Color/theme switch (`ocean` / `amber` / `graphite`) with browser persistence.
-- Source navbar (`telegram`, `google_maps`, `openstreetmap`, `reddit`, `foursquare`, `yelp`, `tomtom`, `opencorporates`) with responsive menu.
+- Color/theme switch (`light` / `dark`) with browser persistence.
+- Source navbar (`telegram`, `google_maps`, `reddit`) with responsive menu.
 - Source filter builder (search, niche, website, phone, location, rating, verified).
 - Dynamic source capability matrix (filter availability + required location) from backend.
 - Per-module credential override in UI (key/token/user-agent) for discovery requests.
@@ -36,13 +36,7 @@ Operational summary for the Telegram scraper.
 ## Source status
 - Telegram: active backend scraping module.
 - Google Maps: active discovery connector (Google Places API).
-- OpenStreetMap: active discovery connector (Nominatim + Overpass).
 - Reddit: active discovery connector (public JSON).
-- Foursquare: active discovery connector (Places API).
-- Yelp: active discovery connector (Fusion API).
-- TomTom: active discovery connector (Search API).
-- OpenCorporates: active discovery connector (company registry API).
-- Instagram/LinkedIn: intentionally disabled due policy/compliance risk for automated scraping.
 
 ## Incremental state
 - last processed id is persisted per target in SQLite (`targets.last_message_id`).
@@ -51,6 +45,10 @@ Operational summary for the Telegram scraper.
 ## Compliance
 - Only public targets or chats with legitimate access by the user account.
 - No private invite bypassing, no spam automation, no member scraping by default.
+
+## Telegram web auth
+- `POST /scrape` in web mode uses non-interactive Telegram auth.
+- Configure `TELEGRAM_STRING_SESSION` (recommended on Vercel) or pre-authorize a local session file.
 
 ## Output paths
 - DB: `data/telegram_scraper.db`

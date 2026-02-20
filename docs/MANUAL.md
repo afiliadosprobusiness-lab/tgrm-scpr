@@ -2,28 +2,23 @@
 
 ## 1) Que es este panel
 Este dashboard te permite:
-- Elegir una plataforma de origen (Telegram, Google Maps, OpenStreetMap, Reddit, Foursquare, Yelp, TomTom, OpenCorporates).
+- Elegir una plataforma de origen (Telegram, Google Maps, Reddit).
 - Definir filtros de busqueda de negocios (nicho, web, telefono, ubicacion, rating).
 - Ejecutar scraping real en Telegram y discovery real en todas las fuentes no-Telegram.
 - Exportar resultados a CSV/JSON.
 
 Importante:
 - Telegram mantiene su flujo de scraping incremental.
-- Las demas fuentes usan discovery activo via APIs oficiales/publicas.
-- Instagram y LinkedIn se deshabilitaron por riesgo de cumplimiento en scraping automatizado.
+- Google Maps y Reddit usan discovery activo via APIs oficiales/publicas.
 
 ## 2) Que debes configurar primero
 1. Credenciales en `.env`:
    - `TELEGRAM_API_ID`
    - `TELEGRAM_API_HASH`
    - `TELEGRAM_SESSION_NAME` (opcional)
+   - `TELEGRAM_STRING_SESSION` (recomendado en Vercel/web para evitar login interactivo)
    - `GOOGLE_MAPS_API_KEY` (para Google Maps)
-   - `FOURSQUARE_API_KEY` (para Foursquare)
-   - `YELP_API_KEY` (para Yelp)
-   - `TOMTOM_API_KEY` (para TomTom)
-   - `OPENCORPORATES_API_TOKEN` (requerido para OpenCorporates)
    - `REDDIT_USER_AGENT` (recomendado para Reddit)
-   - `OSM_USER_AGENT` (recomendado para OpenStreetMap)
 2. Targets en `config.json`:
    - `targets`: `@canal` o `https://t.me/canal`
    - `scrape`: limites, pausas, retries.
@@ -42,12 +37,7 @@ Importante:
 ### A) Navbar de plataformas
 - `Telegram`: modulo activo para scraping real.
 - `Google Maps`: modulo activo para discovery.
-- `OpenStreetMap`: modulo activo para discovery.
 - `Reddit`: modulo activo para discovery.
-- `Foursquare`: modulo activo para discovery.
-- `Yelp`: modulo activo para discovery.
-- `TomTom`: modulo activo para discovery.
-- `OpenCorporates`: modulo activo para discovery.
 
 ### B) Source Search and Filters
 - `Search`: palabra clave o consulta base.
@@ -88,7 +78,7 @@ Nota:
 
 ### E) Preferencias UI
 - `Idioma`: Espanol / English.
-- `Color`: Oceano / Ambar / Grafito.
+- `Color`: Claro / Oscuro.
 - Ambas opciones se guardan en el navegador.
 
 ## 5) Bloques informativos
@@ -105,14 +95,10 @@ Nota:
 
 ## 8) Matriz rapida de capacidades por fuente
 - Google Maps: rating `si`, verificado `si`, web `si`, telefono `si`, ubicacion requerida `no`.
-- OpenStreetMap: rating `no`, verificado `si`, web `si`, telefono `si`, ubicacion requerida `si`.
 - Reddit: rating `no`, verificado `si`, web `si`, telefono `si`, ubicacion requerida `no`.
-- Foursquare: rating `si`, verificado `si`, web `si`, telefono `si`, ubicacion requerida `no`.
-- Yelp: rating `si`, verificado `si`, web `si`, telefono `si`, ubicacion requerida `si`.
-- TomTom: rating `no`, verificado `si`, web `si`, telefono `si`, ubicacion requerida `no`.
-- OpenCorporates: rating `no`, verificado `si`, web `si`, telefono `si`, ubicacion requerida `no`.
 
 ## 9) Nota para Vercel
 - En serverless, el sistema usa `/tmp` por defecto.
 - `/tmp` es efimero: sesion y DB pueden resetearse entre invocaciones.
 - Para persistencia real, usa infraestructura con storage persistente.
+- El scraping Telegram via web no puede pedir codigo SMS; configura `TELEGRAM_STRING_SESSION`.

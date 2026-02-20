@@ -11,8 +11,8 @@ Scraper incremental para grupos/canales de Telegram usando cuenta de usuario (MT
 - Manejo de `FloodWaitError`, reintentos con backoff y pausas aleatorias.
 - `--dry-run` para validar targets y ultimo ID sin scrapear.
 - Interfaz web para ejecutar scrape/export y ver estadisticas.
-- Switch de idioma (ES/EN) y color (Oceano/Ambar/Grafito) en la UI.
-- Navbar responsive por fuente (Telegram, Google Maps, OpenStreetMap, Reddit, Foursquare, Yelp, TomTom, OpenCorporates).
+- Switch de idioma (ES/EN) y tema (Claro/Oscuro) en la UI.
+- Navbar responsive por fuente (Telegram, Google Maps y Reddit).
 - Buscador/filtros por fuente (nicho, web, telefono, ubicacion, rating, verificado).
 - Matriz de capacidades por fuente (filtros soportados y ubicacion requerida) aplicada en tiempo real en la UI.
 - Campo de credencial por modulo en UI para pasar API key/token/user-agent por solicitud (sin persistir en servidor).
@@ -92,13 +92,10 @@ Edita `.env`:
 TELEGRAM_API_ID=123456
 TELEGRAM_API_HASH=your_api_hash_here
 TELEGRAM_SESSION_NAME=telegram_user_session
+# Optional for web/serverless:
+# TELEGRAM_STRING_SESSION=your_telethon_string_session
 GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 REDDIT_USER_AGENT=proyectos-sass-scraper/1.0 (by u/your_reddit_user)
-OSM_USER_AGENT=proyectos-sass-scraper/1.0 (contact: you@example.com)
-FOURSQUARE_API_KEY=your_foursquare_api_key
-YELP_API_KEY=your_yelp_api_key
-TOMTOM_API_KEY=your_tomtom_api_key
-OPENCORPORATES_API_TOKEN=your_opencorporates_api_token
 FLASK_SECRET_KEY=change_me_for_web_ui
 ```
 
@@ -178,21 +175,13 @@ http://127.0.0.1:8000
 Desde UI puedes:
 - lanzar scrape incremental/backfill/dry-run
 - exportar CSV/JSON
-- ver stats por target y runs recientes
 - cambiar idioma y tema de color
 - seleccionar fuente en navbar y definir filtros por fuente
-- abrir el manual desde el boton `Abrir manual completo`
 
 Estado de fuentes:
 - Telegram: backend activo.
 - Google Maps: discovery activo via Google Places API.
-- OpenStreetMap: discovery activo via Nominatim + Overpass.
 - Reddit: discovery activo via JSON publico.
-- Foursquare: discovery activo via Places API oficial.
-- Yelp: discovery activo via Fusion API oficial.
-- TomTom: discovery activo via Search API oficial.
-- OpenCorporates: discovery activo via API oficial de registros mercantiles.
-- Instagram y LinkedIn: deshabilitados por restricciones de automatizacion.
 
 Manual:
 - Archivo: `docs/MANUAL.md`
@@ -204,13 +193,9 @@ Este repo ya incluye `vercel.json` y entrypoint `api/index.py`.
 Variables recomendadas en Vercel:
 - `TELEGRAM_API_ID`
 - `TELEGRAM_API_HASH`
+- `TELEGRAM_STRING_SESSION` (recomendado para que `POST /scrape` funcione sin login interactivo)
 - `GOOGLE_MAPS_API_KEY` (si usaras Google Maps)
-- `OSM_USER_AGENT` (si usaras OpenStreetMap)
 - `REDDIT_USER_AGENT` (si usaras Reddit)
-- `FOURSQUARE_API_KEY` (si usaras Foursquare)
-- `YELP_API_KEY` (si usaras Yelp)
-- `TOMTOM_API_KEY` (si usaras TomTom)
-- `OPENCORPORATES_API_TOKEN` (si usaras OpenCorporates)
 - `TELEGRAM_SESSION_NAME=/tmp/telegram_user_session`
 - `SCRAPER_DB_PATH=/tmp/telegram_scraper.db`
 - `SCRAPER_LOG_FILE=/tmp/app.log`
@@ -227,6 +212,7 @@ Nota de arquitectura serverless:
 - En Vercel, `/tmp` es efimero. DB y sesion pueden perderse entre invocaciones.
 - Para persistencia real (produccion), usa un host con disco persistente o un backend dedicado.
 - La app ya usa `/tmp` por defecto en Vercel para DB/log/export/session si no defines overrides.
+- `POST /scrape` en web no puede pedir codigo SMS interactivo; usa `TELEGRAM_STRING_SESSION` para autorizar.
 
 ## Notas tecnicas
 - Paginacion incremental: `iter_messages(..., min_id=last_message_id, reverse=True)`.

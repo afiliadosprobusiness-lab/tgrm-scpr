@@ -18,6 +18,7 @@ class TelegramSettings:
     api_id: int
     api_hash: str
     session_name: str
+    string_session: str | None
 
 
 @dataclass(frozen=True)
@@ -129,6 +130,7 @@ def load_telegram_settings(env_path: Path | None = None) -> TelegramSettings:
     api_hash = os.getenv("TELEGRAM_API_HASH")
     default_session = "/tmp/telegram_user_session" if os.getenv("VERCEL") else "telegram_user_session"
     session_name = os.getenv("TELEGRAM_SESSION_NAME", default_session)
+    string_session = (os.getenv("TELEGRAM_STRING_SESSION") or "").strip() or None
 
     if not api_id_raw:
         raise ValueError("Missing TELEGRAM_API_ID in environment.")
@@ -139,7 +141,12 @@ def load_telegram_settings(env_path: Path | None = None) -> TelegramSettings:
     if api_id <= 0:
         raise ValueError("TELEGRAM_API_ID must be greater than 0.")
 
-    return TelegramSettings(api_id=api_id, api_hash=api_hash, session_name=session_name)
+    return TelegramSettings(
+        api_id=api_id,
+        api_hash=api_hash,
+        session_name=session_name,
+        string_session=string_session,
+    )
 
 
 def load_app_config(config_path: Path) -> AppConfig:

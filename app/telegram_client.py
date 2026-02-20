@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from telethon import TelegramClient
+from telethon.sessions import StringSession
 
 from .config import TelegramSettings, normalize_target
 
@@ -20,14 +21,31 @@ class ResolvedTarget:
 class TelegramClientManager:
     def __init__(self, settings: TelegramSettings):
         self.settings = settings
+        session = (
+            StringSession(settings.string_session)
+            if settings.string_session
+            else settings.session_name
+        )
         self.client = TelegramClient(
-            settings.session_name,
+            session,
             settings.api_id,
             settings.api_hash,
         )
 
-    async def connect(self) -> None:
-        await self.client.start()
+    async def connect(self, allow_interactive: bool = True) -> None:
+        if allow_interactive:
+            await self.client.start()
+            return
+
+        await self.client.connect()
+        is_authorized = await self.client.is_user_authorized()
+        if is_authorized:
+            return
+
+        raise RuntimeError(
+            "Telegram session is not authorized for web scraping. Configure TELEGRAM_STRING_SESSION "
+            "or authorize the session locally first using CLI."
+        )
 
     async def disconnect(self) -> None:
         await self.client.disconnect()
@@ -47,4 +65,3 @@ class TelegramClientManager:
             title=title,
             entity=entity,
         )
-

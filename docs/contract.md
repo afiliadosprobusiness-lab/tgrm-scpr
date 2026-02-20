@@ -90,10 +90,11 @@ Validation rules:
   - `dry_run` (optional checkbox)
 - Executes scrape and persists `scrape_runs`.
 - Returns updated dashboard HTML with run summary or error.
+- In web/serverless mode, Telegram auth is non-interactive; if session is not authorized, route returns dashboard with error message (no 500 crash).
 
 3. `POST /api/discover`
 - Request JSON fields:
-  - `platform`: `google_maps` | `openstreetmap` | `reddit` | `foursquare` | `yelp` | `tomtom` | `opencorporates`
+  - `platform`: `google_maps` | `reddit`
   - `query`
   - `niche`
   - `has_website`: `any|yes|no`
@@ -115,7 +116,6 @@ Validation rules:
 - Persisted in DB:
   - `source_records`
   - `discovery_runs`
-  - blocked platforms: `instagram`, `linkedin`
 
 4. `GET /api/capabilities`
 - Response JSON:
@@ -160,13 +160,9 @@ Validation rules:
 
 ## Environment contract extensions
 - `FLASK_SECRET_KEY` (recommended for web session protection)
+- `TELEGRAM_STRING_SESSION` (recommended for Telegram web/serverless auth without interactive code prompt)
 - `GOOGLE_MAPS_API_KEY` (required for Google Maps discovery)
-- `FOURSQUARE_API_KEY` (required for Foursquare discovery)
-- `YELP_API_KEY` (required for Yelp discovery)
-- `TOMTOM_API_KEY` (required for TomTom discovery)
-- `OPENCORPORATES_API_TOKEN` (required for OpenCorporates discovery)
 - `REDDIT_USER_AGENT` (recommended for Reddit discovery)
-- `OSM_USER_AGENT` (recommended for OpenStreetMap discovery politeness)
 - `SCRAPER_DB_PATH` (optional DB path override)
 - `SCRAPER_CONFIG_PATH` (optional config path override)
 - `SCRAPER_ENV_FILE` (optional env file path override)
@@ -178,11 +174,11 @@ Validation rules:
 
 ## Frontend UI contract
 - Dashboard includes:
-  - source navbar tabs (`telegram`, `google_maps`, `openstreetmap`, `reddit`, `foursquare`, `yelp`, `tomtom`, `opencorporates`)
+  - source navbar tabs (`telegram`, `google_maps`, `reddit`)
   - source filter builder (search, niche, has website, has phone, location, min rating, verified)
   - filter summary preview panel
   - language switch (`es`, `en`)
-  - color theme switch (`ocean`, `amber`, `graphite`)
+  - color theme switch (`light`, `dark`)
 - Preference persistence:
   - browser `localStorage` keys:
     - `dashboard-language`
@@ -191,13 +187,7 @@ Validation rules:
 - Source backend availability:
   - `telegram`: active scrape workflow
   - `google_maps`: active discovery connector (Google Places API)
-  - `openstreetmap`: active discovery connector (Nominatim + Overpass)
   - `reddit`: active discovery connector (public JSON)
-  - `foursquare`: active discovery connector (Places API)
-  - `yelp`: active discovery connector (Fusion API)
-  - `tomtom`: active discovery connector (Search API)
-  - `opencorporates`: active discovery connector (company registry API)
-  - `instagram` / `linkedin`: intentionally disabled from active UI due policy/compliance risk
 
 ## Changelog del Contrato
 - 2026-02-20
@@ -239,3 +229,13 @@ Validation rules:
 - Cambio: agregada matriz de capacidades por fuente + endpoint `GET /api/capabilities`; `POST /api/discover` ahora devuelve `warnings`, `applied_filters` y `capabilities`.
 - Tipo: non-breaking
 - Impacto: la UI adapta filtros por plataforma y evita ejecuciones ambiguas cuando una fuente no soporta ciertos criterios.
+
+- 2026-02-20
+- Cambio: selector de tema simplificado a `light/dark` con mejoras de contraste en la UI.
+- Tipo: non-breaking
+- Impacto: reduce complejidad visual y mejora legibilidad/accesibilidad en desktop y mobile.
+
+- 2026-02-20
+- Cambio: simplificacion multi-fuente a solo `telegram`, `google_maps` y `reddit`, y limpieza de paneles informativos secundarios en dashboard.
+- Tipo: non-breaking
+- Impacto: reduce complejidad operativa y enfoca la interfaz en flujos principales.

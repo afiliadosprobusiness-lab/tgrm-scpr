@@ -8,25 +8,15 @@ from .sources.capabilities import (
     get_platform_capabilities_with_runtime,
     get_source_capabilities,
 )
-from .sources.foursquare_source import FoursquareSource
 from .sources.google_maps_source import GoogleMapsSource
 from .sources.models import DiscoveryFilters, SourceRecord
-from .sources.opencorporates_source import OpenCorporatesSource
-from .sources.openstreetmap_source import OpenStreetMapSource
 from .sources.reddit_source import RedditSource
-from .sources.tomtom_source import TomTomSource
-from .sources.yelp_source import YelpSource
 from .utils import utc_now_iso
 
 
 SUPPORTED_DISCOVERY_SOURCES = {
     "google_maps",
-    "openstreetmap",
     "reddit",
-    "foursquare",
-    "yelp",
-    "tomtom",
-    "opencorporates",
 }
 
 
@@ -124,18 +114,8 @@ def _resolve_source_client(source: str, credentials: dict[str, str] | None = Non
 
     if source == "google_maps":
         return GoogleMapsSource(api_key=_get_credential(credential_data, "api_key"))
-    if source == "openstreetmap":
-        return OpenStreetMapSource(user_agent=_get_credential(credential_data, "user_agent"))
     if source == "reddit":
         return RedditSource(user_agent=_get_credential(credential_data, "user_agent"))
-    if source == "foursquare":
-        return FoursquareSource(api_key=_get_credential(credential_data, "api_key"))
-    if source == "yelp":
-        return YelpSource(api_key=_get_credential(credential_data, "api_key"))
-    if source == "tomtom":
-        return TomTomSource(api_key=_get_credential(credential_data, "api_key"))
-    if source == "opencorporates":
-        return OpenCorporatesSource(api_token=_get_credential(credential_data, "api_token"))
     raise ValueError(f"Unsupported source: {source}")
 
 

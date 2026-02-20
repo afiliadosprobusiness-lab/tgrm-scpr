@@ -18,9 +18,8 @@
       themeLabel: "Color",
       langSpanish: "Espanol",
       langEnglish: "English",
-      themeOcean: "Oceano",
-      themeAmber: "Ambar",
-      themeGraphite: "Grafito",
+      themeLight: "Claro",
+      themeDark: "Oscuro",
       metricTargetsDb: "Targets en DB",
       metricMessagesStored: "Mensajes guardados",
       metricConfigTargets: "Targets configurados",
@@ -177,9 +176,8 @@
       themeLabel: "Color",
       langSpanish: "Spanish",
       langEnglish: "English",
-      themeOcean: "Ocean",
-      themeAmber: "Amber",
-      themeGraphite: "Graphite",
+      themeLight: "Light",
+      themeDark: "Dark",
       metricTargetsDb: "Targets in DB",
       metricMessagesStored: "Messages Stored",
       metricConfigTargets: "Config Targets",
@@ -322,15 +320,10 @@
   const platformMeta = {
     telegram: { labelKey: "navTelegram", hintKey: "sourceHintTelegram" },
     google_maps: { labelKey: "navGoogleMaps", hintKey: "sourceHintGoogleMaps" },
-    openstreetmap: { labelKey: "navOpenStreetMap", hintKey: "sourceHintOpenStreetMap" },
     reddit: { labelKey: "navReddit", hintKey: "sourceHintReddit" },
-    foursquare: { labelKey: "navFoursquare", hintKey: "sourceHintFoursquare" },
-    yelp: { labelKey: "navYelp", hintKey: "sourceHintYelp" },
-    tomtom: { labelKey: "navTomTom", hintKey: "sourceHintTomTom" },
-    opencorporates: { labelKey: "navOpenCorporates", hintKey: "sourceHintOpenCorporates" },
   };
 
-  const defaultTheme = "ocean";
+  const defaultTheme = "light";
   const defaultPlatform = "telegram";
   const baseCapability = {
     supports_discovery_api: false,
@@ -356,17 +349,6 @@
       credential_label: "Google Maps API Key",
       configured: false,
     },
-    openstreetmap: {
-      ...baseCapability,
-      supports_discovery_api: true,
-      requires_location: true,
-      supports_rating_filter: false,
-      credential_required: false,
-      credential_param: "user_agent",
-      credential_env: "OSM_USER_AGENT",
-      credential_label: "OpenStreetMap User-Agent",
-      configured: true,
-    },
     reddit: {
       ...baseCapability,
       supports_discovery_api: true,
@@ -376,45 +358,6 @@
       credential_env: "REDDIT_USER_AGENT",
       credential_label: "Reddit User-Agent",
       configured: true,
-    },
-    foursquare: {
-      ...baseCapability,
-      supports_discovery_api: true,
-      credential_required: true,
-      credential_param: "api_key",
-      credential_env: "FOURSQUARE_API_KEY",
-      credential_label: "Foursquare API Key",
-      configured: false,
-    },
-    yelp: {
-      ...baseCapability,
-      supports_discovery_api: true,
-      requires_location: true,
-      credential_required: true,
-      credential_param: "api_key",
-      credential_env: "YELP_API_KEY",
-      credential_label: "Yelp API Key",
-      configured: false,
-    },
-    tomtom: {
-      ...baseCapability,
-      supports_discovery_api: true,
-      supports_rating_filter: false,
-      credential_required: true,
-      credential_param: "api_key",
-      credential_env: "TOMTOM_API_KEY",
-      credential_label: "TomTom API Key",
-      configured: false,
-    },
-    opencorporates: {
-      ...baseCapability,
-      supports_discovery_api: true,
-      supports_rating_filter: false,
-      credential_required: true,
-      credential_param: "api_token",
-      credential_env: "OPENCORPORATES_API_TOKEN",
-      credential_label: "OpenCorporates API Token",
-      configured: false,
     },
   };
 
@@ -618,9 +561,16 @@
     renderFilterPreview();
   };
 
+  const normalizeTheme = (theme) => {
+    if (theme === "dark" || theme === "graphite") return "dark";
+    if (theme === "light" || theme === "ocean" || theme === "amber") return "light";
+    return defaultTheme;
+  };
+
   const applyTheme = (theme) => {
-    const selected = theme === "amber" || theme === "graphite" ? theme : defaultTheme;
+    const selected = normalizeTheme(theme);
     document.documentElement.setAttribute("data-theme", selected);
+    return selected;
   };
 
   const refreshPlatformLabels = () => {
@@ -919,11 +869,12 @@
   }
 
   if (themeSelect) {
-    themeSelect.value = initialTheme;
+    themeSelect.value = normalizeTheme(initialTheme);
     themeSelect.addEventListener("change", (event) => {
-      const theme = event.target.value;
+      const theme = normalizeTheme(event.target.value);
       localStorage.setItem("dashboard-theme", theme);
       applyTheme(theme);
+      event.target.value = theme;
     });
   }
 
