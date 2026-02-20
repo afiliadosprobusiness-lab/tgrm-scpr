@@ -22,6 +22,22 @@ MESSAGE_COLUMNS = [
     "scraped_at",
 ]
 
+SOURCE_RECORD_COLUMNS = [
+    "source",
+    "external_id",
+    "name",
+    "url",
+    "description",
+    "website",
+    "phone",
+    "rating",
+    "review_count",
+    "location",
+    "niche",
+    "is_verified",
+    "raw_json",
+]
+
 
 class Storage:
     def __init__(self, db_path: Path):
@@ -90,6 +106,46 @@ class Storage:
                 messages_new INTEGER NOT NULL,
                 flood_waits INTEGER NOT NULL,
                 error_count INTEGER NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS source_records (
+                source TEXT NOT NULL,
+                external_id TEXT NOT NULL,
+                name TEXT NOT NULL,
+                url TEXT,
+                description TEXT,
+                website TEXT,
+                phone TEXT,
+                rating REAL,
+                review_count INTEGER,
+                location TEXT,
+                niche TEXT,
+                is_verified INTEGER NOT NULL DEFAULT 0,
+                raw_json TEXT,
+                first_seen_at TEXT NOT NULL,
+                last_seen_at TEXT NOT NULL,
+                PRIMARY KEY (source, external_id)
+            );
+
+            CREATE INDEX IF NOT EXISTS idx_source_records_source
+                ON source_records(source, last_seen_at);
+
+            CREATE TABLE IF NOT EXISTS discovery_runs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                source TEXT NOT NULL,
+                started_at TEXT NOT NULL,
+                finished_at TEXT NOT NULL,
+                query TEXT,
+                niche TEXT,
+                has_website TEXT NOT NULL,
+                has_phone TEXT NOT NULL,
+                location TEXT,
+                min_rating REAL NOT NULL,
+                only_verified INTEGER NOT NULL DEFAULT 0,
+                limit_value INTEGER NOT NULL,
+                result_count INTEGER NOT NULL,
+                status TEXT NOT NULL,
+                error_message TEXT
             );
             """
         )
@@ -244,4 +300,141 @@ class Storage:
             """,
             (limit,),
         ).fetchall()
+        return [dict(row) for row in rows]
+
+    def upsert_source_records(self, rows: list[dict[str, Any]], now_utc: str) -> int:
+        if not rows:
+            return 0
+
+        placeholders = ", ".join("?" for _ in SOURCE_RECORD_COLUMNS)
+        columns = ", ".join(SOURCE_RECORD_COLUMNS)
+        values: list[tuple[Any, ...]] = []
+        for row in rows:
+            payload = [row.get(col) for col in SOURCE_RECORD_COLUMNS]
+            payload.extend([now_utc, now_utc])
+            values.append(tuple(payload))
+
+        cursor = self.conn.executemany(
+            f"""
+            INSERT INTO source_records (
+                {columns},
+                first_seen_at,
+                last_seen_at
+            )
+            VALUES ({placeholders}, ?, ?)
+            ON CONFLICT(source, external_id) DO UPDATE SET
+                name=excluded.name,
+                url=excluded.url,
+                description=excluded.description,
+                website=excluded.website,
+                phone=excluded.phone,
+                rating=excluded.rating,
+                review_count=excluded.review_count,
+                location=excluded.location,
+                niche=excluded.niche,
+                is_verified=excluded.is_verified,
+                raw_json=excluded.raw_json,
+                last_seen_at=excluded.last_seen_at
+            """,
+            values,
+        )
+        self.conn.commit()
+        return cursor.rowcount
+
+    def get_source_records(self, source: str | None = None, limit: int = 100) -> list[dict[str, Any]]:
+        safe_limit = max(1, min(int(limit), 500))
+        if source:
+            rows = self.conn.execute(
+                """
+                SELECT source, external_id, name, url, description, website, phone,
+                       rating, review_count, location, niche, is_verified, raw_json,
+                       first_seen_at, last_seen_at
+                FROM source_records
+                WHERE source = ?
+                ORDER BY last_seen_at DESC
+                LIMIT ?
+                """,
+                (source, safe_limit),
+            ).fetchall()
+        else:
+            rows = self.conn.execute(
+                """
+                SELECT source, external_id, name, url, description, website, phone,
+                       rating, review_count, location, niche, is_verified, raw_json,
+                       first_seen_at, last_seen_at
+                FROM source_records
+                ORDER BY last_seen_at DESC
+                LIMIT ?
+                """,
+                (safe_limit,),
+            ).fetchall()
+        return [dict(row) for row in rows]
+
+    def insert_discovery_run(self, row: dict[str, Any]) -> None:
+        self.conn.execute(
+            """
+            INSERT INTO discovery_runs (
+                source,
+                started_at,
+                finished_at,
+                query,
+                niche,
+                has_website,
+                has_phone,
+                location,
+                min_rating,
+                only_verified,
+                limit_value,
+                result_count,
+                status,
+                error_message
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                row["source"],
+                row["started_at"],
+                row["finished_at"],
+                row.get("query"),
+                row.get("niche"),
+                row["has_website"],
+                row["has_phone"],
+                row.get("location"),
+                row["min_rating"],
+                row["only_verified"],
+                row["limit_value"],
+                row["result_count"],
+                row["status"],
+                row.get("error_message"),
+            ),
+        )
+        self.conn.commit()
+
+    def get_recent_discovery_runs(self, source: str | None = None, limit: int = 20) -> list[dict[str, Any]]:
+        safe_limit = max(1, min(int(limit), 100))
+        if source:
+            rows = self.conn.execute(
+                """
+                SELECT id, source, started_at, finished_at, query, niche,
+                       has_website, has_phone, location, min_rating, only_verified,
+                       limit_value, result_count, status, error_message
+                FROM discovery_runs
+                WHERE source = ?
+                ORDER BY id DESC
+                LIMIT ?
+                """,
+                (source, safe_limit),
+            ).fetchall()
+        else:
+            rows = self.conn.execute(
+                """
+                SELECT id, source, started_at, finished_at, query, niche,
+                       has_website, has_phone, location, min_rating, only_verified,
+                       limit_value, result_count, status, error_message
+                FROM discovery_runs
+                ORDER BY id DESC
+                LIMIT ?
+                """,
+                (safe_limit,),
+            ).fetchall()
         return [dict(row) for row in rows]

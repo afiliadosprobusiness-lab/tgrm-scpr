@@ -16,6 +16,8 @@ Operational summary for the Telegram scraper.
 ## Web routes
 - `GET /`
 - `POST /scrape`
+- `POST /api/discover`
+- `GET /api/capabilities`
 - `POST /export`
 - `GET /health`
 - `GET /manual`
@@ -24,14 +26,22 @@ Operational summary for the Telegram scraper.
 ## UX controls
 - Language switch (`es` / `en`) with browser persistence.
 - Color/theme switch (`ocean` / `amber` / `graphite`) with browser persistence.
-- Source navbar (`telegram`, `google_maps`, `instagram`, `reddit`) with responsive menu.
+- Source navbar (`telegram`, `google_maps`, `openstreetmap`, `reddit`, `foursquare`, `yelp`, `tomtom`, `opencorporates`) with responsive menu.
 - Source filter builder (search, niche, website, phone, location, rating, verified).
+- Dynamic source capability matrix (filter availability + required location) from backend.
 - On-screen filter preview for the currently selected source.
 - User manual available in `docs/MANUAL.md` and route `/manual`.
 
 ## Source status
 - Telegram: active backend scraping module.
-- Google Maps / Instagram / Reddit: UI-ready placeholders (backend connector pending).
+- Google Maps: active discovery connector (Google Places API).
+- OpenStreetMap: active discovery connector (Nominatim + Overpass).
+- Reddit: active discovery connector (public JSON).
+- Foursquare: active discovery connector (Places API).
+- Yelp: active discovery connector (Fusion API).
+- TomTom: active discovery connector (Search API).
+- OpenCorporates: active discovery connector (company registry API).
+- Instagram/LinkedIn: intentionally disabled due policy/compliance risk for automated scraping.
 
 ## Incremental state
 - last processed id is persisted per target in SQLite (`targets.last_message_id`).

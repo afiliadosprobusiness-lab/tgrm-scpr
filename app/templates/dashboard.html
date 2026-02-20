@@ -22,11 +22,23 @@
         <button type="button" class="platform-link" data-platform="google_maps" data-i18n="navGoogleMaps">
           Google Maps
         </button>
-        <button type="button" class="platform-link" data-platform="instagram" data-i18n="navInstagram">
-          Instagram
+        <button type="button" class="platform-link" data-platform="openstreetmap" data-i18n="navOpenStreetMap">
+          OpenStreetMap
         </button>
         <button type="button" class="platform-link" data-platform="reddit" data-i18n="navReddit">
           Reddit
+        </button>
+        <button type="button" class="platform-link" data-platform="foursquare" data-i18n="navFoursquare">
+          Foursquare
+        </button>
+        <button type="button" class="platform-link" data-platform="yelp" data-i18n="navYelp">
+          Yelp
+        </button>
+        <button type="button" class="platform-link" data-platform="tomtom" data-i18n="navTomTom">
+          TomTom
+        </button>
+        <button type="button" class="platform-link" data-platform="opencorporates" data-i18n="navOpenCorporates">
+          OpenCorporates
         </button>
       </nav>
     </header>
@@ -161,7 +173,24 @@
         <p id="sourceHint" class="hint" data-i18n="sourceHintTelegram">
           Telegram module is active. Use public channels/groups or chats where your account already has access.
         </p>
+        <p id="capabilityHint" class="hint"></p>
         <pre id="filterPreview" class="filter-preview" data-i18n="filterPreviewEmpty">Configure filters and click Apply.</pre>
+        <p id="discoveryFeedback" class="hint"></p>
+        <div class="table-wrap">
+          <table id="discoveryResultsTable">
+            <thead>
+              <tr>
+                <th data-i18n="discoveryColName">Name</th>
+                <th data-i18n="discoveryColWebsite">Website</th>
+                <th data-i18n="discoveryColPhone">Phone</th>
+                <th data-i18n="discoveryColRating">Rating</th>
+                <th data-i18n="discoveryColLocation">Location</th>
+                <th data-i18n="discoveryColLink">Source Link</th>
+              </tr>
+            </thead>
+            <tbody id="discoveryResultsBody"></tbody>
+          </table>
+        </div>
       </section>
 
       <section class="platform-panel" data-platform="telegram">
@@ -258,27 +287,63 @@
 
       <section class="platform-panel" data-platform="google_maps" hidden>
         <article class="card integration-card">
-          <h2 data-i18n="integrationTitle">Integration Roadmap</h2>
-          <p data-i18n="mapsComingSoon">
-            Google Maps scraping module is not active yet. The UI filters are ready to define niche, website and phone requirements.
+          <h2 data-i18n="integrationTitle">Discovery Status</h2>
+          <p data-i18n="mapsActiveHint">
+            Google Maps discovery is active via Google Places API.
           </p>
         </article>
       </section>
 
-      <section class="platform-panel" data-platform="instagram" hidden>
+      <section class="platform-panel" data-platform="openstreetmap" hidden>
         <article class="card integration-card">
-          <h2 data-i18n="integrationTitle">Integration Roadmap</h2>
-          <p data-i18n="instagramComingSoon">
-            Instagram scraping module is not active yet. The UI filters are ready while backend and policy-safe extraction rules are pending.
+          <h2 data-i18n="integrationTitle">Discovery Status</h2>
+          <p data-i18n="osmActiveHint">
+            OpenStreetMap discovery is active via Nominatim and Overpass.
           </p>
         </article>
       </section>
 
       <section class="platform-panel" data-platform="reddit" hidden>
         <article class="card integration-card">
-          <h2 data-i18n="integrationTitle">Integration Roadmap</h2>
-          <p data-i18n="redditComingSoon">
-            Reddit scraping module is not active yet. You can predefine discovery filters and connect a source adapter later.
+          <h2 data-i18n="integrationTitle">Discovery Status</h2>
+          <p data-i18n="redditActiveHint">
+            Reddit discovery is active via public JSON endpoints.
+          </p>
+        </article>
+      </section>
+
+      <section class="platform-panel" data-platform="foursquare" hidden>
+        <article class="card integration-card">
+          <h2 data-i18n="integrationTitle">Discovery Status</h2>
+          <p data-i18n="foursquareActiveHint">
+            Foursquare discovery is active via Places API.
+          </p>
+        </article>
+      </section>
+
+      <section class="platform-panel" data-platform="yelp" hidden>
+        <article class="card integration-card">
+          <h2 data-i18n="integrationTitle">Discovery Status</h2>
+          <p data-i18n="yelpActiveHint">
+            Yelp discovery is active via official Fusion API.
+          </p>
+        </article>
+      </section>
+
+      <section class="platform-panel" data-platform="tomtom" hidden>
+        <article class="card integration-card">
+          <h2 data-i18n="integrationTitle">Discovery Status</h2>
+          <p data-i18n="tomtomActiveHint">
+            TomTom discovery is active via Search API.
+          </p>
+        </article>
+      </section>
+
+      <section class="platform-panel" data-platform="opencorporates" hidden>
+        <article class="card integration-card">
+          <h2 data-i18n="integrationTitle">Discovery Status</h2>
+          <p data-i18n="opencorporatesActiveHint">
+            OpenCorporates discovery is active via public company registry API.
           </p>
         </article>
       </section>

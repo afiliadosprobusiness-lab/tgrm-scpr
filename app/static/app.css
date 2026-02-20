@@ -277,6 +277,16 @@ h2 {
   font-size: 0.8rem;
 }
 
+.feedback-ok {
+  color: var(--ok);
+  font-weight: 600;
+}
+
+.feedback-error {
+  color: var(--danger);
+  font-weight: 600;
+}
+
 .integration-card p {
   margin: 0;
   color: var(--muted);
@@ -344,6 +354,14 @@ select:focus-visible,
   font-size: 0.84rem;
 }
 
+.hint strong {
+  color: var(--ink);
+}
+
+.field-disabled {
+  opacity: 0.58;
+}
+
 .manual-list {
   margin: 0;
   padding-left: 1.15rem;
@@ -407,6 +425,10 @@ td {
   border-bottom: 1px solid #e5ecf4;
   font-size: 0.86rem;
   vertical-align: top;
+}
+
+td a {
+  color: var(--brand-ink);
 }
 
 th {

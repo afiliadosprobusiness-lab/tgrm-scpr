@@ -6,8 +6,12 @@
       menuLabel: "Plataformas",
       navTelegram: "Telegram",
       navGoogleMaps: "Google Maps",
-      navInstagram: "Instagram",
+      navOpenStreetMap: "OpenStreetMap",
       navReddit: "Reddit",
+      navFoursquare: "Foursquare",
+      navYelp: "Yelp",
+      navTomTom: "TomTom",
+      navOpenCorporates: "OpenCorporates",
       heroTitle: "Control y Descubrimiento",
       heroLede: "Elige una fuente, define filtros y ejecuta recoleccion de datos de forma segura.",
       languageLabel: "Idioma",
@@ -44,12 +48,15 @@
       resetFiltersBtn: "Reiniciar",
       sourceHintTelegram:
         "Modulo Telegram activo. Usa canales/grupos publicos o chats donde tu cuenta tenga acceso legitimo.",
-      sourceHintGoogleMaps:
-        "Google Maps aun no esta conectado. Puedes preparar filtros de nicho, web y telefono para futura integracion.",
-      sourceHintInstagram:
-        "Instagram aun no esta conectado. El formulario queda listo para cuando se habilite el conector.",
-      sourceHintReddit:
-        "Reddit aun no esta conectado. Define filtros y deja listo el criterio de busqueda.",
+      sourceHintGoogleMaps: "Google Maps activo. La busqueda usa Google Places API con filtros.",
+      sourceHintOpenStreetMap:
+        "OpenStreetMap activo. Discovery usa Nominatim y Overpass con filtros de negocio.",
+      sourceHintReddit: "Reddit activo. La busqueda usa endpoints JSON publicos con filtros.",
+      sourceHintFoursquare: "Foursquare activo. Discovery usa Places API con filtros de negocio.",
+      sourceHintYelp: "Yelp activo. Discovery usa Fusion API con filtros y ubicacion.",
+      sourceHintTomTom: "TomTom activo. Discovery usa Search API con filtros de negocio.",
+      sourceHintOpenCorporates:
+        "OpenCorporates activo. Discovery usa API oficial de registros mercantiles.",
       filterPreviewEmpty: "Configura filtros y pulsa Aplicar.",
       previewTitle: "Resumen de filtros",
       previewPlatform: "Plataforma",
@@ -61,12 +68,14 @@
       previewRating: "Rating minimo",
       previewVerified: "Solo verificados",
       integrationTitle: "Estado de integracion",
-      mapsComingSoon:
-        "El scraper de Google Maps no esta activo aun. La UI de filtros ya esta lista para definir nicho, web y telefono.",
-      instagramComingSoon:
-        "El scraper de Instagram no esta activo aun. La UI esta lista y falta conectar backend con reglas de cumplimiento.",
-      redditComingSoon:
-        "El scraper de Reddit no esta activo aun. Puedes preparar filtros y conectar el adaptador despues.",
+      mapsActiveHint: "Google Maps discovery activo via Google Places API.",
+      osmActiveHint: "OpenStreetMap discovery activo via Nominatim y Overpass.",
+      redditActiveHint: "Reddit discovery activo via JSON publico.",
+      foursquareActiveHint: "Foursquare discovery activo via Places API.",
+      yelpActiveHint: "Yelp discovery activo via Fusion API oficial.",
+      tomtomActiveHint: "TomTom discovery activo via Search API.",
+      opencorporatesActiveHint:
+        "OpenCorporates discovery activo via API oficial de registros mercantiles.",
       scrapeTitle: "Ejecutar scrape",
       singleTargetLabel: "Target unico (opcional)",
       singleTargetPlaceholder: "@canal o https://t.me/canal",
@@ -115,15 +124,47 @@
       tableMessagesNew: "Mensajes nuevos",
       tableFloodWaits: "Flood waits",
       tableFinished: "Finalizado",
+      discoveryColName: "Nombre",
+      discoveryColWebsite: "Web",
+      discoveryColPhone: "Telefono",
+      discoveryColRating: "Rating",
+      discoveryColLocation: "Ubicacion",
+      discoveryColLink: "Enlace",
+      discoveryRunning: "Ejecutando discovery...",
+      discoveryDone: "Discovery finalizado. Resultados: {count}",
+      discoveryError: "Error de discovery: {message}",
+      discoveryNoData: "Sin resultados para los filtros actuales.",
+      discoveryTelegramInfo: "Para Telegram usa el bloque Run Scrape (incremental/backfill/dry-run).",
+      discoveryWarnings: "Ajustes automaticos: {warnings}",
+      capNotSupported: "No soportado",
+      capabilityTitle: "Capacidades",
+      capabilityDiscoveryOn: "Discovery API: disponible",
+      capabilityDiscoveryOff: "Discovery API: no disponible",
+      capabilityLocationReq: "Ubicacion: requerida",
+      capabilityLocationOpt: "Ubicacion: opcional",
+      capabilityRatingOn: "Filtro rating: disponible",
+      capabilityRatingOff: "Filtro rating: no disponible",
+      capabilityVerifiedOn: "Filtro verificado: disponible",
+      capabilityVerifiedOff: "Filtro verificado: no disponible",
+      capabilityWebsiteOn: "Filtro web: disponible",
+      capabilityWebsiteOff: "Filtro web: no disponible",
+      capabilityPhoneOn: "Filtro telefono: disponible",
+      capabilityPhoneOff: "Filtro telefono: no disponible",
+      openLabel: "Abrir",
+      noDataDash: "-",
     },
     en: {
-      pageTitle: "Multi-Source Scraper Panel",
+      pageTitle: "Multi-Source Panel",
       navTitle: "Multi-Source Scraper",
       menuLabel: "Platforms",
       navTelegram: "Telegram",
       navGoogleMaps: "Google Maps",
-      navInstagram: "Instagram",
+      navOpenStreetMap: "OpenStreetMap",
       navReddit: "Reddit",
+      navFoursquare: "Foursquare",
+      navYelp: "Yelp",
+      navTomTom: "TomTom",
+      navOpenCorporates: "OpenCorporates",
       heroTitle: "Control and Discovery",
       heroLede: "Pick a source, set filters and run data collection safely.",
       languageLabel: "Language",
@@ -160,12 +201,15 @@
       resetFiltersBtn: "Reset",
       sourceHintTelegram:
         "Telegram module is active. Use public channels/groups or chats where your account already has access.",
-      sourceHintGoogleMaps:
-        "Google Maps is not connected yet. You can prepare niche, website and phone filters for future integration.",
-      sourceHintInstagram:
-        "Instagram is not connected yet. The form is ready while backend integration is pending.",
-      sourceHintReddit:
-        "Reddit is not connected yet. Define filters now and connect the source adapter later.",
+      sourceHintGoogleMaps: "Google Maps is active. Discovery runs with Google Places API and your filters.",
+      sourceHintOpenStreetMap:
+        "OpenStreetMap is active. Discovery runs with Nominatim and Overpass and your filters.",
+      sourceHintReddit: "Reddit is active. Discovery runs with public JSON endpoints and your filters.",
+      sourceHintFoursquare: "Foursquare is active. Discovery runs with Places API and your filters.",
+      sourceHintYelp: "Yelp is active. Discovery runs with official Fusion API and your filters.",
+      sourceHintTomTom: "TomTom is active. Discovery runs with Search API and your filters.",
+      sourceHintOpenCorporates:
+        "OpenCorporates is active. Discovery runs with official company registry API.",
       filterPreviewEmpty: "Configure filters and click Apply.",
       previewTitle: "Filter summary",
       previewPlatform: "Platform",
@@ -177,12 +221,13 @@
       previewRating: "Minimum rating",
       previewVerified: "Only verified",
       integrationTitle: "Integration status",
-      mapsComingSoon:
-        "Google Maps scraper is not active yet. Filter UI is ready for niche, website and phone selection.",
-      instagramComingSoon:
-        "Instagram scraper is not active yet. UI is ready while backend and compliance rules are pending.",
-      redditComingSoon:
-        "Reddit scraper is not active yet. You can define filters now and connect an adapter later.",
+      mapsActiveHint: "Google Maps discovery is active via Google Places API.",
+      osmActiveHint: "OpenStreetMap discovery is active via Nominatim and Overpass.",
+      redditActiveHint: "Reddit discovery is active via public JSON endpoints.",
+      foursquareActiveHint: "Foursquare discovery is active via Places API.",
+      yelpActiveHint: "Yelp discovery is active via official Fusion API.",
+      tomtomActiveHint: "TomTom discovery is active via Search API.",
+      opencorporatesActiveHint: "OpenCorporates discovery is active via official company registry API.",
       scrapeTitle: "Run scrape",
       singleTargetLabel: "Single target (optional)",
       singleTargetPlaceholder: "@channel or https://t.me/channel",
@@ -231,18 +276,73 @@
       tableMessagesNew: "Messages new",
       tableFloodWaits: "Flood waits",
       tableFinished: "Finished",
+      discoveryColName: "Name",
+      discoveryColWebsite: "Website",
+      discoveryColPhone: "Phone",
+      discoveryColRating: "Rating",
+      discoveryColLocation: "Location",
+      discoveryColLink: "Source link",
+      discoveryRunning: "Running discovery...",
+      discoveryDone: "Discovery finished. Results: {count}",
+      discoveryError: "Discovery error: {message}",
+      discoveryNoData: "No results for the current filters.",
+      discoveryTelegramInfo: "For Telegram use the Run Scrape block (incremental/backfill/dry-run).",
+      discoveryWarnings: "Automatic adjustments: {warnings}",
+      capNotSupported: "Not supported",
+      capabilityTitle: "Capabilities",
+      capabilityDiscoveryOn: "Discovery API: available",
+      capabilityDiscoveryOff: "Discovery API: unavailable",
+      capabilityLocationReq: "Location: required",
+      capabilityLocationOpt: "Location: optional",
+      capabilityRatingOn: "Rating filter: available",
+      capabilityRatingOff: "Rating filter: unavailable",
+      capabilityVerifiedOn: "Verified filter: available",
+      capabilityVerifiedOff: "Verified filter: unavailable",
+      capabilityWebsiteOn: "Website filter: available",
+      capabilityWebsiteOff: "Website filter: unavailable",
+      capabilityPhoneOn: "Phone filter: available",
+      capabilityPhoneOff: "Phone filter: unavailable",
+      openLabel: "Open",
+      noDataDash: "-",
     },
   };
 
   const platformMeta = {
     telegram: { labelKey: "navTelegram", hintKey: "sourceHintTelegram" },
     google_maps: { labelKey: "navGoogleMaps", hintKey: "sourceHintGoogleMaps" },
-    instagram: { labelKey: "navInstagram", hintKey: "sourceHintInstagram" },
+    openstreetmap: { labelKey: "navOpenStreetMap", hintKey: "sourceHintOpenStreetMap" },
     reddit: { labelKey: "navReddit", hintKey: "sourceHintReddit" },
+    foursquare: { labelKey: "navFoursquare", hintKey: "sourceHintFoursquare" },
+    yelp: { labelKey: "navYelp", hintKey: "sourceHintYelp" },
+    tomtom: { labelKey: "navTomTom", hintKey: "sourceHintTomTom" },
+    opencorporates: { labelKey: "navOpenCorporates", hintKey: "sourceHintOpenCorporates" },
   };
 
   const defaultTheme = "ocean";
   const defaultPlatform = "telegram";
+  const baseCapability = {
+    supports_discovery_api: false,
+    requires_location: false,
+    supports_rating_filter: true,
+    supports_verified_filter: true,
+    supports_has_website_filter: true,
+    supports_has_phone_filter: true,
+  };
+  const fallbackCapabilities = {
+    telegram: { ...baseCapability, supports_discovery_api: false },
+    google_maps: { ...baseCapability, supports_discovery_api: true },
+    openstreetmap: {
+      ...baseCapability,
+      supports_discovery_api: true,
+      requires_location: true,
+      supports_rating_filter: false,
+    },
+    reddit: { ...baseCapability, supports_discovery_api: true, supports_rating_filter: false },
+    foursquare: { ...baseCapability, supports_discovery_api: true },
+    yelp: { ...baseCapability, supports_discovery_api: true, requires_location: true },
+    tomtom: { ...baseCapability, supports_discovery_api: true, supports_rating_filter: false },
+    opencorporates: { ...baseCapability, supports_discovery_api: true, supports_rating_filter: false },
+  };
 
   const menuToggle = document.getElementById("menuToggle");
   const platformNav = document.getElementById("platformNav");
@@ -250,24 +350,123 @@
   const platformPanels = Array.from(document.querySelectorAll(".platform-panel"));
   const platformBadge = document.getElementById("activePlatformBadge");
   const sourceHint = document.getElementById("sourceHint");
+  const capabilityHint = document.getElementById("capabilityHint");
 
   const languageSelect = document.getElementById("languageSwitcher");
   const themeSelect = document.getElementById("themeSwitcher");
+  const hasWebsiteSelect = document.getElementById("hasWebsite");
+  const hasPhoneSelect = document.getElementById("hasPhone");
+  const locationInput = document.getElementById("sourceLocation");
+  const minRatingSelect = document.getElementById("minRating");
+  const verifiedCheckbox = document.getElementById("onlyVerified");
 
   const sourceFilterForm = document.getElementById("sourceFilterForm");
   const resetFiltersBtn = document.getElementById("resetFiltersBtn");
   const filterPreview = document.getElementById("filterPreview");
+  const discoveryFeedback = document.getElementById("discoveryFeedback");
+  const discoveryResultsBody = document.getElementById("discoveryResultsBody");
 
   let currentLanguage = "es";
   let currentPlatform = defaultPlatform;
   let lastPayload = null;
+  let capabilitiesByPlatform = { ...fallbackCapabilities };
 
   const getMessage = (key) => i18n[currentLanguage]?.[key] || i18n.es[key] || key;
+
+  const formatTemplate = (template, vars) => {
+    let output = template;
+    Object.entries(vars).forEach(([key, value]) => {
+      output = output.replace(`{${key}}`, String(value));
+    });
+    return output;
+  };
 
   const getStoredLanguage = () => {
     const saved = localStorage.getItem("dashboard-language");
     if (saved === "es" || saved === "en") return saved;
     return navigator.language && navigator.language.toLowerCase().startsWith("es") ? "es" : "en";
+  };
+
+  const getCapabilities = (platform) => {
+    const platformCapabilities = capabilitiesByPlatform[platform];
+    if (!platformCapabilities) return { ...baseCapability };
+    return { ...baseCapability, ...platformCapabilities };
+  };
+
+  const setFieldEnabled = (control, enabled) => {
+    if (!control) return;
+    control.disabled = !enabled;
+    const field = control.closest(".source-field, .source-check");
+    if (field) {
+      field.classList.toggle("field-disabled", !enabled);
+    }
+  };
+
+  const renderCapabilityHint = () => {
+    if (!capabilityHint) return;
+    const capabilities = getCapabilities(currentPlatform);
+    const lines = [
+      `${getMessage("capabilityTitle")}:`,
+      capabilities.supports_discovery_api ? getMessage("capabilityDiscoveryOn") : getMessage("capabilityDiscoveryOff"),
+      capabilities.requires_location ? getMessage("capabilityLocationReq") : getMessage("capabilityLocationOpt"),
+      capabilities.supports_rating_filter ? getMessage("capabilityRatingOn") : getMessage("capabilityRatingOff"),
+      capabilities.supports_verified_filter
+        ? getMessage("capabilityVerifiedOn")
+        : getMessage("capabilityVerifiedOff"),
+      capabilities.supports_has_website_filter
+        ? getMessage("capabilityWebsiteOn")
+        : getMessage("capabilityWebsiteOff"),
+      capabilities.supports_has_phone_filter ? getMessage("capabilityPhoneOn") : getMessage("capabilityPhoneOff"),
+    ];
+    capabilityHint.textContent = lines.join(" | ");
+  };
+
+  const applyCapabilityState = () => {
+    const capabilities = getCapabilities(currentPlatform);
+    const isTelegram = currentPlatform === "telegram";
+
+    const ratingEnabled = isTelegram || capabilities.supports_rating_filter;
+    const verifiedEnabled = isTelegram || capabilities.supports_verified_filter;
+    const websiteEnabled = isTelegram || capabilities.supports_has_website_filter;
+    const phoneEnabled = isTelegram || capabilities.supports_has_phone_filter;
+
+    setFieldEnabled(minRatingSelect, ratingEnabled);
+    setFieldEnabled(verifiedCheckbox, verifiedEnabled);
+    setFieldEnabled(hasWebsiteSelect, websiteEnabled);
+    setFieldEnabled(hasPhoneSelect, phoneEnabled);
+
+    if (!ratingEnabled && minRatingSelect) {
+      minRatingSelect.value = "0";
+    }
+    if (!verifiedEnabled && verifiedCheckbox) {
+      verifiedCheckbox.checked = false;
+    }
+    if (!websiteEnabled && hasWebsiteSelect) {
+      hasWebsiteSelect.value = "any";
+    }
+    if (!phoneEnabled && hasPhoneSelect) {
+      hasPhoneSelect.value = "any";
+    }
+
+    if (locationInput) {
+      locationInput.required = !isTelegram && Boolean(capabilities.requires_location);
+      locationInput.setAttribute("aria-required", locationInput.required ? "true" : "false");
+    }
+
+    renderCapabilityHint();
+  };
+
+  const loadCapabilities = async () => {
+    try {
+      const response = await fetch("/api/capabilities", { method: "GET" });
+      if (!response.ok) return;
+      const payload = await response.json();
+      const platforms = payload && typeof payload === "object" ? payload.platforms : null;
+      if (!platforms || typeof platforms !== "object") return;
+      capabilitiesByPlatform = { ...fallbackCapabilities, ...platforms };
+    } catch (_) {
+      capabilitiesByPlatform = { ...fallbackCapabilities };
+    }
   };
 
   const applyLanguage = (lang) => {
@@ -292,6 +491,7 @@
     });
 
     refreshPlatformLabels();
+    renderCapabilityHint();
     renderFilterPreview();
   };
 
@@ -326,6 +526,8 @@
     });
 
     refreshPlatformLabels();
+    applyCapabilityState();
+    renderFilterPreview();
   };
 
   const boolLabel = (value) => (value ? getMessage("filterYes") : getMessage("filterNo"));
@@ -336,17 +538,22 @@
       filterPreview.textContent = getMessage("filterPreviewEmpty");
       return;
     }
+    const capabilities = getCapabilities(lastPayload.platform);
+    const ratingValue = capabilities.supports_rating_filter ? lastPayload.minRating : getMessage("capNotSupported");
+    const verifiedValue = capabilities.supports_verified_filter
+      ? boolLabel(lastPayload.onlyVerified)
+      : getMessage("capNotSupported");
 
     const lines = [
       `${getMessage("previewTitle")}:`,
       `${getMessage("previewPlatform")}: ${getMessage(platformMeta[lastPayload.platform].labelKey)}`,
       `${getMessage("previewQuery")}: ${lastPayload.query || "-"}`,
-      `${getMessage("previewNiche")}: ${lastPayload.niche}`,
+      `${getMessage("previewNiche")}: ${lastPayload.nicheLabel || lastPayload.niche}`,
       `${getMessage("previewWebsite")}: ${lastPayload.hasWebsite}`,
       `${getMessage("previewPhone")}: ${lastPayload.hasPhone}`,
       `${getMessage("previewLocation")}: ${lastPayload.location || "-"}`,
-      `${getMessage("previewRating")}: ${lastPayload.minRating}`,
-      `${getMessage("previewVerified")}: ${boolLabel(lastPayload.onlyVerified)}`,
+      `${getMessage("previewRating")}: ${ratingValue}`,
+      `${getMessage("previewVerified")}: ${verifiedValue}`,
     ];
 
     filterPreview.textContent = lines.join("\n");
@@ -371,13 +578,132 @@
     return {
       platform: currentPlatform,
       query,
-      niche: nicheLabel,
+      niche: nicheRaw,
+      nicheLabel,
       hasWebsite: hasWebsiteLabel,
       hasPhone: hasPhoneLabel,
       location,
       minRating: minRatingRaw,
       onlyVerified,
+      niche_raw: nicheRaw,
+      has_website: hasWebsiteRaw,
+      has_phone: hasPhoneRaw,
+      min_rating: minRatingRaw,
+      only_verified: onlyVerified,
+      limit: 20,
     };
+  };
+
+  const setFeedback = (message, type) => {
+    if (!discoveryFeedback) return;
+    discoveryFeedback.textContent = message;
+    discoveryFeedback.classList.remove("feedback-ok", "feedback-error");
+    if (type === "ok") discoveryFeedback.classList.add("feedback-ok");
+    if (type === "error") discoveryFeedback.classList.add("feedback-error");
+  };
+
+  const renderResults = (items) => {
+    if (!discoveryResultsBody) return;
+    discoveryResultsBody.innerHTML = "";
+    if (!items || items.length === 0) {
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+      td.colSpan = 6;
+      td.textContent = getMessage("discoveryNoData");
+      tr.appendChild(td);
+      discoveryResultsBody.appendChild(tr);
+      return;
+    }
+
+    items.forEach((item) => {
+      const tr = document.createElement("tr");
+      const nameCell = document.createElement("td");
+      nameCell.textContent = item.name || getMessage("noDataDash");
+
+      const websiteCell = document.createElement("td");
+      if (item.website) {
+        const link = document.createElement("a");
+        link.href = item.website;
+        link.target = "_blank";
+        link.rel = "noopener";
+        link.textContent = item.website;
+        websiteCell.appendChild(link);
+      } else {
+        websiteCell.textContent = getMessage("noDataDash");
+      }
+
+      const phoneCell = document.createElement("td");
+      phoneCell.textContent = item.phone || getMessage("noDataDash");
+
+      const ratingCell = document.createElement("td");
+      ratingCell.textContent = item.rating ?? getMessage("noDataDash");
+
+      const locationCell = document.createElement("td");
+      locationCell.textContent = item.location || getMessage("noDataDash");
+
+      const sourceLinkCell = document.createElement("td");
+      if (item.url) {
+        const link = document.createElement("a");
+        link.href = item.url;
+        link.target = "_blank";
+        link.rel = "noopener";
+        link.textContent = getMessage("openLabel");
+        sourceLinkCell.appendChild(link);
+      } else {
+        sourceLinkCell.textContent = getMessage("noDataDash");
+      }
+
+      tr.appendChild(nameCell);
+      tr.appendChild(websiteCell);
+      tr.appendChild(phoneCell);
+      tr.appendChild(ratingCell);
+      tr.appendChild(locationCell);
+      tr.appendChild(sourceLinkCell);
+      discoveryResultsBody.appendChild(tr);
+    });
+  };
+
+  const runDiscovery = async (payload) => {
+    if (payload.platform === "telegram") {
+      setFeedback(getMessage("discoveryTelegramInfo"), "ok");
+      renderResults([]);
+      return;
+    }
+
+    setFeedback(getMessage("discoveryRunning"), "ok");
+    try {
+      const response = await fetch("/api/discover", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+      if (!response.ok || data.status !== "ok") {
+        const baseMessage = data.message || "unknown error";
+        const warningText =
+          Array.isArray(data.warnings) && data.warnings.length > 0
+            ? ` ${formatTemplate(getMessage("discoveryWarnings"), { warnings: data.warnings.join(" | ") })}`
+            : "";
+        setFeedback(formatTemplate(getMessage("discoveryError"), { message: `${baseMessage}${warningText}` }), "error");
+        renderResults([]);
+        return;
+      }
+
+      let message = formatTemplate(getMessage("discoveryDone"), { count: data.count || 0 });
+      if (Array.isArray(data.warnings) && data.warnings.length > 0) {
+        message += ` ${formatTemplate(getMessage("discoveryWarnings"), { warnings: data.warnings.join(" | ") })}`;
+      }
+      setFeedback(message, "ok");
+      renderResults(data.items || []);
+    } catch (error) {
+      setFeedback(
+        formatTemplate(getMessage("discoveryError"), {
+          message: error instanceof Error ? error.message : "request failed",
+        }),
+        "error"
+      );
+      renderResults([]);
+    }
   };
 
   if (menuToggle && platformNav) {
@@ -400,8 +726,10 @@
   if (sourceFilterForm) {
     sourceFilterForm.addEventListener("submit", (event) => {
       event.preventDefault();
-      lastPayload = buildPayload();
+      const payload = buildPayload();
+      lastPayload = payload;
       renderFilterPreview();
+      runDiscovery(payload);
     });
   }
 
@@ -410,6 +738,8 @@
       sourceFilterForm.reset();
       lastPayload = null;
       renderFilterPreview();
+      setFeedback("", "");
+      renderResults([]);
     });
   }
 
@@ -435,7 +765,13 @@
     });
   }
 
-  applyTheme(initialTheme);
-  setPlatform(initialPlatform);
-  applyLanguage(initialLanguage);
+  const initialize = async () => {
+    await loadCapabilities();
+    applyTheme(initialTheme);
+    setPlatform(initialPlatform);
+    applyLanguage(initialLanguage);
+    renderResults([]);
+  };
+
+  initialize();
 })();

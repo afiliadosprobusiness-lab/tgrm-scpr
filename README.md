@@ -12,8 +12,9 @@ Scraper incremental para grupos/canales de Telegram usando cuenta de usuario (MT
 - `--dry-run` para validar targets y ultimo ID sin scrapear.
 - Interfaz web para ejecutar scrape/export y ver estadisticas.
 - Switch de idioma (ES/EN) y color (Oceano/Ambar/Grafito) en la UI.
-- Navbar responsive por fuente (Telegram, Google Maps, Instagram, Reddit).
+- Navbar responsive por fuente (Telegram, Google Maps, OpenStreetMap, Reddit, Foursquare, Yelp, TomTom, OpenCorporates).
 - Buscador/filtros por fuente (nicho, web, telefono, ubicacion, rating, verificado).
+- Matriz de capacidades por fuente (filtros soportados y ubicacion requerida) aplicada en tiempo real en la UI.
 - Manual de uso incluido en `docs/MANUAL.md` y accesible por `/manual`.
 
 ## Restricciones de cumplimiento
@@ -90,6 +91,13 @@ Edita `.env`:
 TELEGRAM_API_ID=123456
 TELEGRAM_API_HASH=your_api_hash_here
 TELEGRAM_SESSION_NAME=telegram_user_session
+GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+REDDIT_USER_AGENT=proyectos-sass-scraper/1.0 (by u/your_reddit_user)
+OSM_USER_AGENT=proyectos-sass-scraper/1.0 (contact: you@example.com)
+FOURSQUARE_API_KEY=your_foursquare_api_key
+YELP_API_KEY=your_yelp_api_key
+TOMTOM_API_KEY=your_tomtom_api_key
+OPENCORPORATES_API_TOKEN=your_opencorporates_api_token
 FLASK_SECRET_KEY=change_me_for_web_ui
 ```
 
@@ -176,7 +184,14 @@ Desde UI puedes:
 
 Estado de fuentes:
 - Telegram: backend activo.
-- Google Maps / Instagram / Reddit: UI lista, backend pendiente.
+- Google Maps: discovery activo via Google Places API.
+- OpenStreetMap: discovery activo via Nominatim + Overpass.
+- Reddit: discovery activo via JSON publico.
+- Foursquare: discovery activo via Places API oficial.
+- Yelp: discovery activo via Fusion API oficial.
+- TomTom: discovery activo via Search API oficial.
+- OpenCorporates: discovery activo via API oficial de registros mercantiles.
+- Instagram y LinkedIn: deshabilitados por restricciones de automatizacion.
 
 Manual:
 - Archivo: `docs/MANUAL.md`
@@ -188,6 +203,13 @@ Este repo ya incluye `vercel.json` y entrypoint `api/index.py`.
 Variables recomendadas en Vercel:
 - `TELEGRAM_API_ID`
 - `TELEGRAM_API_HASH`
+- `GOOGLE_MAPS_API_KEY` (si usaras Google Maps)
+- `OSM_USER_AGENT` (si usaras OpenStreetMap)
+- `REDDIT_USER_AGENT` (si usaras Reddit)
+- `FOURSQUARE_API_KEY` (si usaras Foursquare)
+- `YELP_API_KEY` (si usaras Yelp)
+- `TOMTOM_API_KEY` (si usaras TomTom)
+- `OPENCORPORATES_API_TOKEN` (si usaras OpenCorporates)
 - `TELEGRAM_SESSION_NAME=/tmp/telegram_user_session`
 - `SCRAPER_DB_PATH=/tmp/telegram_scraper.db`
 - `SCRAPER_LOG_FILE=/tmp/app.log`

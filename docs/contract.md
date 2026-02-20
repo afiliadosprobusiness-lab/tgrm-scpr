@@ -91,22 +91,61 @@ Validation rules:
 - Executes scrape and persists `scrape_runs`.
 - Returns updated dashboard HTML with run summary or error.
 
-3. `POST /export`
+3. `POST /api/discover`
+- Request JSON fields:
+  - `platform`: `google_maps` | `openstreetmap` | `reddit` | `foursquare` | `yelp` | `tomtom` | `opencorporates`
+  - `query`
+  - `niche`
+  - `has_website`: `any|yes|no`
+  - `has_phone`: `any|yes|no`
+  - `location`
+  - `min_rating`
+  - `only_verified`
+  - `limit`
+- Response JSON:
+  - `status`
+  - `source`
+  - `count`
+  - `items`
+  - `recent_runs`
+  - `warnings`
+  - `applied_filters`
+  - `capabilities`
+- Persisted in DB:
+  - `source_records`
+  - `discovery_runs`
+  - blocked platforms: `instagram`, `linkedin`
+
+4. `GET /api/capabilities`
+- Response JSON:
+```json
+{
+  "platforms": {
+    "google_maps": {
+      "supports_discovery_api": true,
+      "requires_location": false,
+      "supports_rating_filter": true
+    }
+  }
+}
+```
+
+5. `POST /export`
 - Form field:
   - `format`: `csv` or `json`
 - Response: file attachment (`messages_<timestamp>.csv|json`).
 
-4. `GET /health`
+6. `GET /health`
 - Response JSON:
 ```json
 {"status":"ok"}
 ```
 
-5. `GET /manual`
+7. `GET /manual`
 - Serves `docs/MANUAL.md` (text/markdown) if available.
 - Response: `404` if file does not exist.
 
-6. `GET /api/stats`
+8. `GET /api/stats`
 - Response JSON:
 ```json
 {
@@ -117,6 +156,13 @@ Validation rules:
 
 ## Environment contract extensions
 - `FLASK_SECRET_KEY` (recommended for web session protection)
+- `GOOGLE_MAPS_API_KEY` (required for Google Maps discovery)
+- `FOURSQUARE_API_KEY` (required for Foursquare discovery)
+- `YELP_API_KEY` (required for Yelp discovery)
+- `TOMTOM_API_KEY` (required for TomTom discovery)
+- `OPENCORPORATES_API_TOKEN` (required for OpenCorporates discovery)
+- `REDDIT_USER_AGENT` (recommended for Reddit discovery)
+- `OSM_USER_AGENT` (recommended for OpenStreetMap discovery politeness)
 - `SCRAPER_DB_PATH` (optional DB path override)
 - `SCRAPER_CONFIG_PATH` (optional config path override)
 - `SCRAPER_ENV_FILE` (optional env file path override)
@@ -128,7 +174,7 @@ Validation rules:
 
 ## Frontend UI contract
 - Dashboard includes:
-  - source navbar tabs (`telegram`, `google_maps`, `instagram`, `reddit`)
+  - source navbar tabs (`telegram`, `google_maps`, `openstreetmap`, `reddit`, `foursquare`, `yelp`, `tomtom`, `opencorporates`)
   - source filter builder (search, niche, has website, has phone, location, min rating, verified)
   - filter summary preview panel
   - language switch (`es`, `en`)
@@ -139,8 +185,15 @@ Validation rules:
     - `dashboard-theme`
     - `dashboard-platform`
 - Source backend availability:
-  - `telegram`: active
-  - `google_maps`, `instagram`, `reddit`: placeholder UI state (no backend extraction yet)
+  - `telegram`: active scrape workflow
+  - `google_maps`: active discovery connector (Google Places API)
+  - `openstreetmap`: active discovery connector (Nominatim + Overpass)
+  - `reddit`: active discovery connector (public JSON)
+  - `foursquare`: active discovery connector (Places API)
+  - `yelp`: active discovery connector (Fusion API)
+  - `tomtom`: active discovery connector (Search API)
+  - `opencorporates`: active discovery connector (company registry API)
+  - `instagram` / `linkedin`: intentionally disabled from active UI due policy/compliance risk
 
 ## Changelog del Contrato
 - 2026-02-20
@@ -167,3 +220,18 @@ Validation rules:
 - Cambio: agregado navbar por fuente y filtro multi-criterio de negocios en la UI.
 - Tipo: non-breaking
 - Impacto: prepara extension multi-fuente sin romper scraping Telegram existente.
+
+- 2026-02-20
+- Cambio: activados conectores discovery para Google Maps y Reddit; Instagram removido por riesgo de cumplimiento.
+- Tipo: non-breaking
+- Impacto: habilita busqueda real multi-fuente en /api/discover manteniendo Telegram scrape estable.
+
+- 2026-02-20
+- Cambio: agregados conectores discovery para OpenStreetMap, Foursquare, Yelp, TomTom y OpenCorporates; LinkedIn bloqueado por cumplimiento.
+- Tipo: non-breaking
+- Impacto: expande cobertura de fuentes seguras con APIs oficiales/publicas y mantiene bloqueo de plataformas con alto riesgo de restricciones.
+
+- 2026-02-20
+- Cambio: agregada matriz de capacidades por fuente + endpoint `GET /api/capabilities`; `POST /api/discover` ahora devuelve `warnings`, `applied_filters` y `capabilities`.
+- Tipo: non-breaking
+- Impacto: la UI adapta filtros por plataforma y evita ejecuciones ambiguas cuando una fuente no soporta ciertos criterios.

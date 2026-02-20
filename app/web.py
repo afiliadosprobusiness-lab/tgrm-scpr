@@ -8,12 +8,17 @@ from typing import Any
 
 from flask import Flask, Response, jsonify, render_template, request, send_file
 
-from .config import load_app_config, load_telegram_settings
+from .config import load_app_config, load_dotenv, load_telegram_settings
+from .discovery import DiscoveryService, SUPPORTED_DISCOVERY_SOURCES, get_ui_capabilities
 from .exporters import export_messages
+from .sources.capabilities import get_source_capabilities
+from .sources.models import DiscoveryFilters
 from .scraper import ScrapeSummary, TelegramScraper
 from .storage import Storage
 from .telegram_client import TelegramClientManager
-from .utils import setup_logging
+from .utils import setup_logging, utc_now_iso
+
+DISABLED_DISCOVERY_SOURCES = {"instagram", "linkedin"}
 
 
 def _build_paths(
@@ -55,6 +60,7 @@ def create_app(
     paths = _build_paths(config_path=config_path, db_path=db_path, env_path=env_path, log_path=log_path)
     app.config.update(paths)
     app.secret_key = os.getenv("FLASK_SECRET_KEY", "change-this-secret-key")
+    load_dotenv(paths["env_path"] if paths["env_path"].exists() else None, override=False)
 
     logger = setup_logging(paths["log_path"])
     app.config["logger"] = logger
@@ -136,7 +142,93 @@ def create_app(
         with _open_storage(app) as storage:
             target_rows = storage.get_target_stats()
             runs = storage.get_recent_runs(limit=10)
-        return jsonify({"targets": target_rows, "runs": runs})
+            discovery_runs = storage.get_recent_discovery_runs(limit=10)
+        return jsonify({"targets": target_rows, "runs": runs, "discovery_runs": discovery_runs})
+
+    @app.get("/api/capabilities")
+    def api_capabilities():
+        return jsonify({"platforms": get_ui_capabilities()})
+
+    @app.post("/api/discover")
+    def api_discover():
+        payload = request.get_json(silent=True) or {}
+        source = str(payload.get("platform", "")).strip().lower()
+
+        if source == "telegram":
+            return (
+                jsonify(
+                    {
+                        "status": "error",
+                        "source": source,
+                        "message": "Telegram discovery is not exposed in /api/discover. Use /scrape workflow.",
+                    }
+                ),
+                400,
+            )
+        if source in DISABLED_DISCOVERY_SOURCES:
+            return (
+                jsonify(
+                    {
+                        "status": "error",
+                        "source": source,
+                        "message": (
+                            f"{source.capitalize()} connector is disabled due platform restrictions on automated "
+                            "data collection without explicit authorization."
+                        ),
+                    }
+                ),
+                400,
+            )
+        if source not in SUPPORTED_DISCOVERY_SOURCES:
+            return jsonify({"status": "error", "message": f"Unsupported source: {source}"}), 400
+
+        try:
+            filters = DiscoveryFilters.from_payload(payload)
+        except ValueError as exc:
+            return jsonify({"status": "error", "source": source, "message": str(exc)}), 400
+
+        service = DiscoveryService(logger=app.config["logger"])
+        records, summary, warnings, effective_filters = service.run(source=source, filters=filters)
+
+        with _open_storage(app) as storage:
+            storage.upsert_source_records([item.to_storage_row() for item in records], utc_now_iso())
+            storage.insert_discovery_run(summary.to_storage_row(effective_filters))
+            latest = storage.get_source_records(source=source, limit=20)
+            recent_runs = storage.get_recent_discovery_runs(source=source, limit=6)
+
+        if summary.status != "ok":
+            status_code = 400 if _is_client_error(summary.error_message or "") else 502
+            return (
+                jsonify(
+                    {
+                        "status": summary.status,
+                        "source": source,
+                        "count": 0,
+                        "items": [],
+                        "recent_runs": recent_runs,
+                        "warnings": warnings,
+                        "applied_filters": effective_filters.to_api_dict(),
+                        "capabilities": get_source_capabilities(source),
+                        "message": summary.error_message or "Discovery failed.",
+                    }
+                ),
+                status_code,
+            )
+
+        return jsonify(
+            {
+                "status": summary.status,
+                "source": source,
+                "count": len(records),
+                "items": [item.to_api_dict() for item in records],
+                "stored_items": latest,
+                "recent_runs": recent_runs,
+                "warnings": warnings,
+                "applied_filters": effective_filters.to_api_dict(),
+                "capabilities": get_source_capabilities(source),
+                "message": "Discovery completed.",
+            }
+        )
 
     return app
 
@@ -206,3 +298,18 @@ async def _execute_scrape(
     finally:
         await client_manager.disconnect()
         storage.close()
+
+
+def _is_client_error(message: str) -> bool:
+    normalized = message.strip().lower()
+    if not normalized:
+        return False
+    prefixes = ("missing ", "unsupported source", "invalid ")
+    if normalized.startswith(prefixes):
+        return True
+    fragments = (
+        "requires a location",
+        "must be",
+        "one of:",
+    )
+    return any(fragment in normalized for fragment in fragments)

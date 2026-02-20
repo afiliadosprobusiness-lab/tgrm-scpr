@@ -1,21 +1,29 @@
-﻿# Manual de uso - Multi-Source Scraper Panel
+# Manual de uso - Multi-Source Scraper Panel
 
 ## 1) Que es este panel
 Este dashboard te permite:
-- Elegir una plataforma de origen (Telegram, Google Maps, Instagram, Reddit).
+- Elegir una plataforma de origen (Telegram, Google Maps, OpenStreetMap, Reddit, Foursquare, Yelp, TomTom, OpenCorporates).
 - Definir filtros de busqueda de negocios (nicho, web, telefono, ubicacion, rating).
-- Ejecutar scraping real en Telegram.
+- Ejecutar scraping real en Telegram y discovery real en todas las fuentes no-Telegram.
 - Exportar resultados a CSV/JSON.
 
 Importante:
-- El backend activo hoy es Telegram.
-- Google Maps, Instagram y Reddit estan disponibles en UI como modulos de preparacion (sin scraping backend aun).
+- Telegram mantiene su flujo de scraping incremental.
+- Las demas fuentes usan discovery activo via APIs oficiales/publicas.
+- Instagram y LinkedIn se deshabilitaron por riesgo de cumplimiento en scraping automatizado.
 
 ## 2) Que debes configurar primero
 1. Credenciales en `.env`:
    - `TELEGRAM_API_ID`
    - `TELEGRAM_API_HASH`
    - `TELEGRAM_SESSION_NAME` (opcional)
+   - `GOOGLE_MAPS_API_KEY` (para Google Maps)
+   - `FOURSQUARE_API_KEY` (para Foursquare)
+   - `YELP_API_KEY` (para Yelp)
+   - `TOMTOM_API_KEY` (para TomTom)
+   - `OPENCORPORATES_API_TOKEN` (requerido para OpenCorporates)
+   - `REDDIT_USER_AGENT` (recomendado para Reddit)
+   - `OSM_USER_AGENT` (recomendado para OpenStreetMap)
 2. Targets en `config.json`:
    - `targets`: `@canal` o `https://t.me/canal`
    - `scrape`: limites, pausas, retries.
@@ -33,7 +41,13 @@ Importante:
 
 ### A) Navbar de plataformas
 - `Telegram`: modulo activo para scraping real.
-- `Google Maps`, `Instagram`, `Reddit`: modulos en estado "roadmap" (sin extractor backend activo).
+- `Google Maps`: modulo activo para discovery.
+- `OpenStreetMap`: modulo activo para discovery.
+- `Reddit`: modulo activo para discovery.
+- `Foursquare`: modulo activo para discovery.
+- `Yelp`: modulo activo para discovery.
+- `TomTom`: modulo activo para discovery.
+- `OpenCorporates`: modulo activo para discovery.
 
 ### B) Source Search and Filters
 - `Search`: palabra clave o consulta base.
@@ -45,10 +59,12 @@ Importante:
 - `Only verified profiles`: prioriza perfiles verificados.
 - `Apply Filters`: guarda y muestra resumen de filtros activos.
 - `Reset`: limpia filtros.
+- `Capabilities`: el panel muestra una matriz por fuente (si requiere ubicacion y que filtros soporta).
 
 Nota:
-- En esta version, los filtros son de planificacion y construccion de criterio.
-- El scraping operativo se ejecuta en el modulo Telegram.
+- En Telegram, los filtros te ayudan a definir criterio, y la ejecucion real va por bloque `Run Scrape`.
+- En fuentes no Telegram, `Apply Filters` ejecuta discovery real y devuelve resultados en tabla.
+- Si un filtro no aplica a la fuente, se desactiva automaticamente en la UI.
 
 ### C) Run Scrape (Telegram)
 - `Single target (optional)`:
@@ -85,7 +101,16 @@ Nota:
 - Respeta FloodWait y limites de plataforma.
 - No intentes acceso no autorizado ni automatizacion de spam.
 
-## 7) Nota para Vercel
+## 8) Matriz rapida de capacidades por fuente
+- Google Maps: rating `si`, verificado `si`, web `si`, telefono `si`, ubicacion requerida `no`.
+- OpenStreetMap: rating `no`, verificado `si`, web `si`, telefono `si`, ubicacion requerida `si`.
+- Reddit: rating `no`, verificado `si`, web `si`, telefono `si`, ubicacion requerida `no`.
+- Foursquare: rating `si`, verificado `si`, web `si`, telefono `si`, ubicacion requerida `no`.
+- Yelp: rating `si`, verificado `si`, web `si`, telefono `si`, ubicacion requerida `si`.
+- TomTom: rating `no`, verificado `si`, web `si`, telefono `si`, ubicacion requerida `no`.
+- OpenCorporates: rating `no`, verificado `si`, web `si`, telefono `si`, ubicacion requerida `no`.
+
+## 9) Nota para Vercel
 - En serverless, el sistema usa `/tmp` por defecto.
 - `/tmp` es efimero: sesion y DB pueden resetearse entre invocaciones.
 - Para persistencia real, usa infraestructura con storage persistente.
