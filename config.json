@@ -1,0 +1,16 @@
+{
+  "targets": [
+    "@durov",
+    "https://t.me/telegram"
+  ],
+  "scrape": {
+    "limit_per_target": 2000,
+    "since_days": 30,
+    "sleep_min_ms": 700,
+    "sleep_max_ms": 1600,
+    "include_media_metadata": true,
+    "batch_size": 200,
+    "max_retries": 3
+  }
+}
+
