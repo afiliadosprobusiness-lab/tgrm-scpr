@@ -46,6 +46,12 @@
       sourceVerifiedLabel: "Solo perfiles verificados",
       applyFiltersBtn: "Aplicar filtros",
       resetFiltersBtn: "Reiniciar",
+      credentialInputLabel: "Credencial del modulo",
+      credentialInputPlaceholder: "Pega API key o token para esta fuente",
+      credentialConfigured: "Credencial configurada en servidor.",
+      credentialRequiredMissing: "Este modulo requiere credencial. Agregala en este campo o en variables de entorno.",
+      credentialOptionalHint: "Credencial opcional. Si la envias aqui se usa solo en esta solicitud.",
+      discoveryNeedsCredential: "Falta credencial para este modulo.",
       sourceHintTelegram:
         "Modulo Telegram activo. Usa canales/grupos publicos o chats donde tu cuenta tenga acceso legitimo.",
       sourceHintGoogleMaps: "Google Maps activo. La busqueda usa Google Places API con filtros.",
@@ -199,6 +205,12 @@
       sourceVerifiedLabel: "Only verified profiles",
       applyFiltersBtn: "Apply filters",
       resetFiltersBtn: "Reset",
+      credentialInputLabel: "Module credential",
+      credentialInputPlaceholder: "Paste API key or token for this source",
+      credentialConfigured: "Credential configured on server.",
+      credentialRequiredMissing: "This module requires credentials. Add it here or in environment variables.",
+      credentialOptionalHint: "Optional credential. If provided here, it is used only for this request.",
+      discoveryNeedsCredential: "Missing credentials for this module.",
       sourceHintTelegram:
         "Telegram module is active. Use public channels/groups or chats where your account already has access.",
       sourceHintGoogleMaps: "Google Maps is active. Discovery runs with Google Places API and your filters.",
@@ -327,21 +339,83 @@
     supports_verified_filter: true,
     supports_has_website_filter: true,
     supports_has_phone_filter: true,
+    credential_required: false,
+    credential_param: null,
+    credential_env: null,
+    credential_label: null,
+    configured: true,
   };
   const fallbackCapabilities = {
-    telegram: { ...baseCapability, supports_discovery_api: false },
-    google_maps: { ...baseCapability, supports_discovery_api: true },
+    telegram: { ...baseCapability, supports_discovery_api: false, configured: true },
+    google_maps: {
+      ...baseCapability,
+      supports_discovery_api: true,
+      credential_required: true,
+      credential_param: "api_key",
+      credential_env: "GOOGLE_MAPS_API_KEY",
+      credential_label: "Google Maps API Key",
+      configured: false,
+    },
     openstreetmap: {
       ...baseCapability,
       supports_discovery_api: true,
       requires_location: true,
       supports_rating_filter: false,
+      credential_required: false,
+      credential_param: "user_agent",
+      credential_env: "OSM_USER_AGENT",
+      credential_label: "OpenStreetMap User-Agent",
+      configured: true,
     },
-    reddit: { ...baseCapability, supports_discovery_api: true, supports_rating_filter: false },
-    foursquare: { ...baseCapability, supports_discovery_api: true },
-    yelp: { ...baseCapability, supports_discovery_api: true, requires_location: true },
-    tomtom: { ...baseCapability, supports_discovery_api: true, supports_rating_filter: false },
-    opencorporates: { ...baseCapability, supports_discovery_api: true, supports_rating_filter: false },
+    reddit: {
+      ...baseCapability,
+      supports_discovery_api: true,
+      supports_rating_filter: false,
+      credential_required: false,
+      credential_param: "user_agent",
+      credential_env: "REDDIT_USER_AGENT",
+      credential_label: "Reddit User-Agent",
+      configured: true,
+    },
+    foursquare: {
+      ...baseCapability,
+      supports_discovery_api: true,
+      credential_required: true,
+      credential_param: "api_key",
+      credential_env: "FOURSQUARE_API_KEY",
+      credential_label: "Foursquare API Key",
+      configured: false,
+    },
+    yelp: {
+      ...baseCapability,
+      supports_discovery_api: true,
+      requires_location: true,
+      credential_required: true,
+      credential_param: "api_key",
+      credential_env: "YELP_API_KEY",
+      credential_label: "Yelp API Key",
+      configured: false,
+    },
+    tomtom: {
+      ...baseCapability,
+      supports_discovery_api: true,
+      supports_rating_filter: false,
+      credential_required: true,
+      credential_param: "api_key",
+      credential_env: "TOMTOM_API_KEY",
+      credential_label: "TomTom API Key",
+      configured: false,
+    },
+    opencorporates: {
+      ...baseCapability,
+      supports_discovery_api: true,
+      supports_rating_filter: false,
+      credential_required: true,
+      credential_param: "api_token",
+      credential_env: "OPENCORPORATES_API_TOKEN",
+      credential_label: "OpenCorporates API Token",
+      configured: false,
+    },
   };
 
   const menuToggle = document.getElementById("menuToggle");
@@ -365,6 +439,10 @@
   const filterPreview = document.getElementById("filterPreview");
   const discoveryFeedback = document.getElementById("discoveryFeedback");
   const discoveryResultsBody = document.getElementById("discoveryResultsBody");
+  const credentialWrap = document.getElementById("moduleCredentialWrap");
+  const credentialLabel = document.getElementById("moduleCredentialLabel");
+  const credentialInput = document.getElementById("moduleCredentialInput");
+  const credentialHelp = document.getElementById("moduleCredentialHelp");
 
   let currentLanguage = "es";
   let currentPlatform = defaultPlatform;
@@ -402,6 +480,48 @@
     }
   };
 
+  const getCredentialStorageKey = (platform) => `dashboard-credential-${platform}`;
+
+  const getCurrentCredential = (platform) => {
+    if (!credentialInput) return "";
+    if (platform === currentPlatform) {
+      return credentialInput.value.trim();
+    }
+    return (localStorage.getItem(getCredentialStorageKey(platform)) || "").trim();
+  };
+
+  const renderCredentialState = () => {
+    if (!credentialWrap || !credentialLabel || !credentialInput || !credentialHelp) return;
+    const capabilities = getCapabilities(currentPlatform);
+    const isTelegram = currentPlatform === "telegram";
+
+    if (isTelegram || !capabilities.supports_discovery_api || !capabilities.credential_param) {
+      credentialWrap.hidden = true;
+      credentialInput.value = "";
+      credentialHelp.textContent = "";
+      return;
+    }
+
+    credentialWrap.hidden = false;
+    credentialLabel.textContent = capabilities.credential_label || getMessage("credentialInputLabel");
+    credentialInput.placeholder = getMessage("credentialInputPlaceholder");
+    const saved = localStorage.getItem(getCredentialStorageKey(currentPlatform)) || "";
+    credentialInput.value = saved;
+
+    const hasServerCredential = Boolean(capabilities.configured);
+    if (capabilities.credential_required) {
+      credentialHelp.textContent = hasServerCredential
+        ? getMessage("credentialConfigured")
+        : getMessage("credentialRequiredMissing");
+      credentialHelp.classList.toggle("error-text", !hasServerCredential && !saved.trim());
+    } else {
+      credentialHelp.textContent = hasServerCredential
+        ? getMessage("credentialConfigured")
+        : getMessage("credentialOptionalHint");
+      credentialHelp.classList.remove("error-text");
+    }
+  };
+
   const renderCapabilityHint = () => {
     if (!capabilityHint) return;
     const capabilities = getCapabilities(currentPlatform);
@@ -417,8 +537,9 @@
         ? getMessage("capabilityWebsiteOn")
         : getMessage("capabilityWebsiteOff"),
       capabilities.supports_has_phone_filter ? getMessage("capabilityPhoneOn") : getMessage("capabilityPhoneOff"),
+      capabilities.credential_required ? getMessage("credentialInputLabel") : "",
     ];
-    capabilityHint.textContent = lines.join(" | ");
+    capabilityHint.textContent = lines.filter(Boolean).join(" | ");
   };
 
   const applyCapabilityState = () => {
@@ -454,6 +575,7 @@
     }
 
     renderCapabilityHint();
+    renderCredentialState();
   };
 
   const loadCapabilities = async () => {
@@ -492,6 +614,7 @@
 
     refreshPlatformLabels();
     renderCapabilityHint();
+    renderCredentialState();
     renderFilterPreview();
   };
 
@@ -574,6 +697,12 @@
       document.querySelector(`#hasWebsite option[value="${hasWebsiteRaw}"]`)?.textContent?.trim() || hasWebsiteRaw;
     const hasPhoneLabel =
       document.querySelector(`#hasPhone option[value="${hasPhoneRaw}"]`)?.textContent?.trim() || hasPhoneRaw;
+    const capabilities = getCapabilities(currentPlatform);
+    const credentialValue = getCurrentCredential(currentPlatform);
+    const credentials = {};
+    if (capabilities.credential_param && credentialValue) {
+      credentials[capabilities.credential_param] = credentialValue;
+    }
 
     return {
       platform: currentPlatform,
@@ -591,6 +720,7 @@
       min_rating: minRatingRaw,
       only_verified: onlyVerified,
       limit: 20,
+      credentials,
     };
   };
 
@@ -669,6 +799,31 @@
       renderResults([]);
       return;
     }
+    const capabilities = getCapabilities(payload.platform);
+    if (capabilities.requires_location && !String(payload.location || "").trim()) {
+      setFeedback(
+        formatTemplate(getMessage("discoveryError"), {
+          message: getMessage("capabilityLocationReq"),
+        }),
+        "error"
+      );
+      renderResults([]);
+      return;
+    }
+    if (
+      capabilities.credential_required &&
+      !capabilities.configured &&
+      !((payload.credentials || {})[capabilities.credential_param || ""])
+    ) {
+      setFeedback(
+        formatTemplate(getMessage("discoveryError"), {
+          message: getMessage("discoveryNeedsCredential"),
+        }),
+        "error"
+      );
+      renderResults([]);
+      return;
+    }
 
     setFeedback(getMessage("discoveryRunning"), "ok");
     try {
@@ -722,6 +877,13 @@
       }
     });
   });
+
+  if (credentialInput) {
+    credentialInput.addEventListener("input", () => {
+      localStorage.setItem(getCredentialStorageKey(currentPlatform), credentialInput.value);
+      renderCredentialState();
+    });
+  }
 
   if (sourceFilterForm) {
     sourceFilterForm.addEventListener("submit", (event) => {

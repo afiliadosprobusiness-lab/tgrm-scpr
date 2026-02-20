@@ -15,6 +15,7 @@ Scraper incremental para grupos/canales de Telegram usando cuenta de usuario (MT
 - Navbar responsive por fuente (Telegram, Google Maps, OpenStreetMap, Reddit, Foursquare, Yelp, TomTom, OpenCorporates).
 - Buscador/filtros por fuente (nicho, web, telefono, ubicacion, rating, verificado).
 - Matriz de capacidades por fuente (filtros soportados y ubicacion requerida) aplicada en tiempo real en la UI.
+- Campo de credencial por modulo en UI para pasar API key/token/user-agent por solicitud (sin persistir en servidor).
 - Manual de uso incluido en `docs/MANUAL.md` y accesible por `/manual`.
 
 ## Restricciones de cumplimiento

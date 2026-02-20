@@ -60,11 +60,13 @@ Importante:
 - `Apply Filters`: guarda y muestra resumen de filtros activos.
 - `Reset`: limpia filtros.
 - `Capabilities`: el panel muestra una matriz por fuente (si requiere ubicacion y que filtros soporta).
+- `Module credential`: campo para pegar API key/token/user-agent por fuente sin tocar `.env`.
 
 Nota:
 - En Telegram, los filtros te ayudan a definir criterio, y la ejecucion real va por bloque `Run Scrape`.
 - En fuentes no Telegram, `Apply Filters` ejecuta discovery real y devuelve resultados en tabla.
 - Si un filtro no aplica a la fuente, se desactiva automaticamente en la UI.
+- Si una fuente requiere credencial y no esta en servidor, puedes pegarla en `Module credential`.
 
 ### C) Run Scrape (Telegram)
 - `Single target (optional)`:

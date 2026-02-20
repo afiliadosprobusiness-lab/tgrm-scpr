@@ -29,6 +29,7 @@ Operational summary for the Telegram scraper.
 - Source navbar (`telegram`, `google_maps`, `openstreetmap`, `reddit`, `foursquare`, `yelp`, `tomtom`, `opencorporates`) with responsive menu.
 - Source filter builder (search, niche, website, phone, location, rating, verified).
 - Dynamic source capability matrix (filter availability + required location) from backend.
+- Per-module credential override in UI (key/token/user-agent) for discovery requests.
 - On-screen filter preview for the currently selected source.
 - User manual available in `docs/MANUAL.md` and route `/manual`.
 

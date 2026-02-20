@@ -9,7 +9,11 @@ from typing import Any
 from flask import Flask, Response, jsonify, render_template, request, send_file
 
 from .config import load_app_config, load_dotenv, load_telegram_settings
-from .discovery import DiscoveryService, SUPPORTED_DISCOVERY_SOURCES, get_ui_capabilities
+from .discovery import (
+    DiscoveryService,
+    SUPPORTED_DISCOVERY_SOURCES,
+    get_ui_capabilities_with_runtime,
+)
 from .exporters import export_messages
 from .sources.capabilities import get_source_capabilities
 from .sources.models import DiscoveryFilters
@@ -147,7 +151,7 @@ def create_app(
 
     @app.get("/api/capabilities")
     def api_capabilities():
-        return jsonify({"platforms": get_ui_capabilities()})
+        return jsonify({"platforms": get_ui_capabilities_with_runtime()})
 
     @app.post("/api/discover")
     def api_discover():
@@ -187,8 +191,14 @@ def create_app(
         except ValueError as exc:
             return jsonify({"status": "error", "source": source, "message": str(exc)}), 400
 
+        credentials = _extract_credentials(payload)
+
         service = DiscoveryService(logger=app.config["logger"])
-        records, summary, warnings, effective_filters = service.run(source=source, filters=filters)
+        records, summary, warnings, effective_filters = service.run(
+            source=source,
+            filters=filters,
+            credentials=credentials,
+        )
 
         with _open_storage(app) as storage:
             storage.upsert_source_records([item.to_storage_row() for item in records], utc_now_iso())
@@ -311,5 +321,24 @@ def _is_client_error(message: str) -> bool:
         "requires a location",
         "must be",
         "one of:",
+        "request_denied",
+        "invalid key",
+        "invalid_request",
+        "unauthorized",
     )
     return any(fragment in normalized for fragment in fragments)
+
+
+def _extract_credentials(payload: dict[str, Any]) -> dict[str, str]:
+    raw = payload.get("credentials")
+    if not isinstance(raw, dict):
+        return {}
+    clean_map: dict[str, str] = {}
+    for key, value in raw.items():
+        if value is None:
+            continue
+        text = str(value).strip()
+        if not text:
+            continue
+        clean_map[str(key)] = text
+    return clean_map

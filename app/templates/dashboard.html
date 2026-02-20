@@ -169,6 +169,19 @@
               Reset
             </button>
           </div>
+          <div id="moduleCredentialWrap" class="source-field" hidden>
+            <label id="moduleCredentialLabel" for="moduleCredentialInput" data-i18n="credentialInputLabel">
+              Module credential
+            </label>
+            <input
+              id="moduleCredentialInput"
+              type="password"
+              autocomplete="off"
+              data-i18n-placeholder="credentialInputPlaceholder"
+              placeholder="Paste API key/token for this source"
+            />
+            <p id="moduleCredentialHelp" class="small"></p>
+          </div>
         </form>
         <p id="sourceHint" class="hint" data-i18n="sourceHintTelegram">
           Telegram module is active. Use public channels/groups or chats where your account already has access.

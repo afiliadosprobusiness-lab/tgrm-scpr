@@ -102,6 +102,7 @@ Validation rules:
   - `min_rating`
   - `only_verified`
   - `limit`
+  - `credentials` (optional map, e.g. `{ "api_key": "..." }`)
 - Response JSON:
   - `status`
   - `source`
@@ -124,7 +125,10 @@ Validation rules:
     "google_maps": {
       "supports_discovery_api": true,
       "requires_location": false,
-      "supports_rating_filter": true
+      "supports_rating_filter": true,
+      "credential_required": true,
+      "credential_param": "api_key",
+      "configured": false
     }
   }
 }

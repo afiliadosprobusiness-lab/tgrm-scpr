@@ -3,7 +3,11 @@ from __future__ import annotations
 from dataclasses import dataclass, replace
 from typing import Any
 
-from .sources.capabilities import SOURCE_CAPABILITIES, get_source_capabilities
+from .sources.capabilities import (
+    get_platform_capabilities,
+    get_platform_capabilities_with_runtime,
+    get_source_capabilities,
+)
 from .sources.foursquare_source import FoursquareSource
 from .sources.google_maps_source import GoogleMapsSource
 from .sources.models import DiscoveryFilters, SourceRecord
@@ -59,7 +63,7 @@ class DiscoveryService:
         self.logger = logger
 
     def run(
-        self, *, source: str, filters: DiscoveryFilters
+        self, *, source: str, filters: DiscoveryFilters, credentials: dict[str, str] | None = None
     ) -> tuple[list[SourceRecord], DiscoverySummary, list[str], DiscoveryFilters]:
         started_at = utc_now_iso()
         records: list[SourceRecord] = []
@@ -70,11 +74,22 @@ class DiscoveryService:
 
         try:
             effective_filters, warnings = _normalize_filters(source=source, filters=filters)
-            records = _resolve_source_client(source).search(effective_filters)
+            records = _resolve_source_client(source, credentials=credentials).search(effective_filters)
         except Exception as exc:
             status = "error"
             error_message = str(exc)
-            if error_message.startswith("Missing ") or "requires a location" in error_message:
+            normalized_error = error_message.strip().lower()
+            expected_error_fragments = (
+                "missing ",
+                "requires a location",
+                "request_denied",
+                "invalid key",
+                "invalid_request",
+                "unauthorized",
+            )
+            if normalized_error.startswith("missing ") or any(
+                fragment in normalized_error for fragment in expected_error_fragments
+            ):
                 self.logger.error(
                     "Discovery validation/configuration error",
                     extra={"event": "discovery.validation_error", "source": source, "config_error": error_message},
@@ -97,24 +112,30 @@ class DiscoveryService:
 
 
 def get_ui_capabilities() -> dict[str, dict[str, Any]]:
-    return {key: dict(value) for key, value in SOURCE_CAPABILITIES.items()}
+    return get_platform_capabilities()
 
 
-def _resolve_source_client(source: str):
+def get_ui_capabilities_with_runtime() -> dict[str, dict[str, Any]]:
+    return get_platform_capabilities_with_runtime()
+
+
+def _resolve_source_client(source: str, credentials: dict[str, str] | None = None):
+    credential_data = credentials or {}
+
     if source == "google_maps":
-        return GoogleMapsSource()
+        return GoogleMapsSource(api_key=_get_credential(credential_data, "api_key"))
     if source == "openstreetmap":
-        return OpenStreetMapSource()
+        return OpenStreetMapSource(user_agent=_get_credential(credential_data, "user_agent"))
     if source == "reddit":
-        return RedditSource()
+        return RedditSource(user_agent=_get_credential(credential_data, "user_agent"))
     if source == "foursquare":
-        return FoursquareSource()
+        return FoursquareSource(api_key=_get_credential(credential_data, "api_key"))
     if source == "yelp":
-        return YelpSource()
+        return YelpSource(api_key=_get_credential(credential_data, "api_key"))
     if source == "tomtom":
-        return TomTomSource()
+        return TomTomSource(api_key=_get_credential(credential_data, "api_key"))
     if source == "opencorporates":
-        return OpenCorporatesSource()
+        return OpenCorporatesSource(api_token=_get_credential(credential_data, "api_token"))
     raise ValueError(f"Unsupported source: {source}")
 
 
@@ -143,3 +164,11 @@ def _normalize_filters(source: str, filters: DiscoveryFilters) -> tuple[Discover
         warnings.append("has_phone filter ignored by this source and reset to any.")
 
     return normalized, warnings
+
+
+def _get_credential(credentials: dict[str, str], key: str) -> str | None:
+    raw = credentials.get(key)
+    if raw is None:
+        return None
+    value = str(raw).strip()
+    return value or None

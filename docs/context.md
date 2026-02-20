@@ -21,6 +21,7 @@
 - `app/templates/dashboard.html`: dashboard UI
 - `app/static/app.css`: responsive visual styles
 - `app/static/dashboard.js`: i18n + theme + platform navigation + filter preview + dynamic capability matrix
+  - includes per-source credential override sent as `credentials` in discovery payload
 - `api/index.py`: Vercel serverless entrypoint
 - `vercel.json`: Vercel routing/build config
 - `docs/MANUAL.md`: user-facing operation manual

@@ -362,6 +362,10 @@ select:focus-visible,
   opacity: 0.58;
 }
 
+#moduleCredentialWrap {
+  margin-top: 0.2rem;
+}
+
 .manual-list {
   margin: 0;
   padding-left: 1.15rem;
