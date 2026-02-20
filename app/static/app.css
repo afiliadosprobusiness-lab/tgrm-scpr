@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
+﻿@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
 
 :root {
   --bg-a: #f3f8ff;
@@ -64,7 +64,7 @@ body {
 
 .page {
   width: min(1120px, 100% - 2rem);
-  margin: 1.5rem auto 2rem;
+  margin: 1rem auto 2rem;
   display: grid;
   gap: 1rem;
 }
@@ -83,6 +83,52 @@ body {
   transition: background 160ms ease, border-color 160ms ease;
 }
 
+.topnav {
+  width: min(1120px, 100% - 2rem);
+  margin: 1rem auto 0;
+  padding: 0.9rem 1rem;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.topnav-brand h1 {
+  margin: 0.15rem 0 0;
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+}
+
+.menu-toggle {
+  display: none;
+  width: max-content;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--card) 90%, #f3f8ff);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.platform-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.platform-link {
+  width: auto;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--card) 92%, #eef5ff);
+  color: var(--ink);
+  padding: 0.45rem 0.85rem;
+  font-weight: 600;
+}
+
+.platform-link.is-active {
+  border-color: color-mix(in srgb, var(--brand) 45%, white);
+  background: color-mix(in srgb, var(--brand) 22%, white);
+  color: var(--brand-ink);
+}
+
 .hero-top {
   display: flex;
   justify-content: space-between;
@@ -90,9 +136,9 @@ body {
   align-items: flex-start;
 }
 
-.hero h1 {
+.hero h2 {
   margin: 0.1rem 0 0.35rem;
-  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-size: clamp(1.35rem, 2.3vw, 1.8rem);
 }
 
 .eyebrow {
@@ -113,7 +159,7 @@ body {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.55rem;
-  width: min(300px, 100%);
+  width: min(320px, 100%);
 }
 
 .toolbar-field {
@@ -159,6 +205,83 @@ h2 {
   gap: 0.65rem;
 }
 
+.source-card {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.source-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.platform-badge {
+  border: 1px solid color-mix(in srgb, var(--brand) 45%, white);
+  background: color-mix(in srgb, var(--brand) 18%, white);
+  color: var(--brand-ink);
+  font-weight: 700;
+  font-size: 0.8rem;
+  border-radius: 999px;
+  padding: 0.25rem 0.65rem;
+  white-space: nowrap;
+}
+
+.source-form {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.source-grid {
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.source-query {
+  grid-column: 1 / -1;
+}
+
+.source-check {
+  grid-column: 1 / -1;
+}
+
+.source-field {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.source-actions {
+  display: flex;
+  gap: 0.7rem;
+}
+
+.button-secondary {
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--card) 90%, #f4f8ff);
+  color: var(--ink);
+}
+
+.filter-preview {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  border-radius: 10px;
+  border: 1px dashed var(--line);
+  padding: 0.75rem;
+  background: color-mix(in srgb, var(--card) 92%, #edf5ff);
+  color: var(--muted);
+  font-family: "IBM Plex Mono", "Consolas", monospace;
+  font-size: 0.8rem;
+}
+
+.integration-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
 label {
   font-size: 0.88rem;
   color: var(--muted);
@@ -195,7 +318,10 @@ button:active {
 
 button:focus-visible,
 input:focus-visible,
-select:focus-visible {
+select:focus-visible,
+.platform-link:focus-visible,
+.menu-toggle:focus-visible,
+.manual-link:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--brand) 35%, white);
   outline-offset: 1px;
 }
@@ -208,6 +334,7 @@ select:focus-visible {
 
 .check input {
   width: auto;
+  margin-top: 0.2rem;
 }
 
 .hint,
@@ -239,11 +366,6 @@ select:focus-visible {
 
 .manual-link:hover {
   background: color-mix(in srgb, var(--brand) 15%, transparent);
-}
-
-.manual-link:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--brand) 35%, white);
-  outline-offset: 1px;
 }
 
 .alert {
@@ -322,9 +444,36 @@ th {
   .toolbar {
     width: 100%;
   }
+
+  .source-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
-@media (max-width: 680px) {
+@media (max-width: 760px) {
+  .topnav {
+    padding: 0.75rem;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+  }
+
+  .platform-nav {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .platform-nav.is-open {
+    display: flex;
+  }
+
+  .platform-link {
+    width: 100%;
+    border-radius: 10px;
+  }
+
   .page {
     width: min(1120px, 100% - 1rem);
     margin-top: 0.75rem;
@@ -337,6 +486,10 @@ th {
 
   .metrics {
     grid-template-columns: 1fr;
+  }
+
+  .source-actions {
+    flex-direction: column;
   }
 
   table {

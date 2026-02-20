@@ -1,77 +1,91 @@
-# Manual De Uso - Telegram Scraper
+﻿# Manual de uso - Multi-Source Scraper Panel
 
-## 1) Objetivo
-Este sistema extrae mensajes de canales/grupos de Telegram (publicos o accesibles por tu cuenta) y guarda datos en SQLite de forma incremental.
+## 1) Que es este panel
+Este dashboard te permite:
+- Elegir una plataforma de origen (Telegram, Google Maps, Instagram, Reddit).
+- Definir filtros de busqueda de negocios (nicho, web, telefono, ubicacion, rating).
+- Ejecutar scraping real en Telegram.
+- Exportar resultados a CSV/JSON.
 
-## 2) Requisitos iniciales
-1. Configura `.env`:
+Importante:
+- El backend activo hoy es Telegram.
+- Google Maps, Instagram y Reddit estan disponibles en UI como modulos de preparacion (sin scraping backend aun).
+
+## 2) Que debes configurar primero
+1. Credenciales en `.env`:
    - `TELEGRAM_API_ID`
    - `TELEGRAM_API_HASH`
    - `TELEGRAM_SESSION_NAME` (opcional)
-2. Configura `config.json`:
-   - `targets`
-   - parametros de `scrape` (limit, pausas, retries, etc.)
+2. Targets en `config.json`:
+   - `targets`: `@canal` o `https://t.me/canal`
+   - `scrape`: limites, pausas, retries.
 
-## 3) Flujo recomendado
-1. Ejecuta `Dry-run` para validar targets sin scrapear mensajes.
-2. Ejecuta scrape incremental para uso diario.
-3. Usa backfill solo para historico inicial.
-4. Exporta CSV/JSON cuando quieras analizar fuera.
+## 3) Flujo recomendado (paso a paso)
+1. Abre el dashboard.
+2. En el navbar, selecciona `Telegram`.
+3. Usa el bloque `Source Search and Filters` para definir tu criterio.
+4. Ejecuta `Dry-run` primero para validar acceso.
+5. Ejecuta scrape incremental (sin backfill) para operacion diaria.
+6. Usa backfill solo para historico inicial.
+7. Exporta CSV/JSON para analisis externo.
 
-## 4) Opciones de la interfaz web
+## 4) Explicacion de cada opcion
 
-### Run Scrape
+### A) Navbar de plataformas
+- `Telegram`: modulo activo para scraping real.
+- `Google Maps`, `Instagram`, `Reddit`: modulos en estado "roadmap" (sin extractor backend activo).
+
+### B) Source Search and Filters
+- `Search`: palabra clave o consulta base.
+- `Business niche`: categoria del negocio.
+- `Has website`: filtra por presencia de sitio web.
+- `Has phone`: filtra por presencia de telefono.
+- `Location`: ciudad/pais objetivo.
+- `Minimum rating`: umbral de calidad.
+- `Only verified profiles`: prioriza perfiles verificados.
+- `Apply Filters`: guarda y muestra resumen de filtros activos.
+- `Reset`: limpia filtros.
+
+Nota:
+- En esta version, los filtros son de planificacion y construccion de criterio.
+- El scraping operativo se ejecuta en el modulo Telegram.
+
+### C) Run Scrape (Telegram)
 - `Single target (optional)`:
-  - Si lo dejas vacio, procesa todos los targets del `config.json`.
-  - Si pones un target (`@canal` o `https://t.me/canal`), procesa solo ese.
-
+  - Vacio = procesa todos los targets del `config.json`.
+  - Con valor = procesa solo ese target.
 - `Backfill history`:
-  - Descarga historico hacia atras (limitado por `limit_per_target`).
-  - Recomendado solo para primera carga.
-
+  - Descarga historico hacia atras hasta el limite configurado.
 - `Dry-run only`:
-  - Resuelve los targets y muestra `target_id` + `last_message_id`.
-  - No guarda mensajes nuevos.
-  - Ideal para validar acceso y configuracion.
+  - Resuelve target IDs y muestra estado sin guardar mensajes.
+- `Start scrape`:
+  - Ejecuta el scraping con las opciones marcadas.
 
-- `Start Scrape`:
-  - Inicia el proceso con las opciones seleccionadas.
-  - Al finalizar veras resumen: targets OK/fallidos, mensajes nuevos, flood waits.
-
-### Export Messages
+### D) Export Messages
 - `Format`:
-  - `CSV`: util para Excel/BI.
-  - `JSON`: util para pipelines y scripts.
-- `Download Export`:
-  - Descarga el archivo generado desde la base SQLite.
+  - `CSV`: Excel/BI.
+  - `JSON`: pipelines/script.
+- `Download export`:
+  - Descarga los mensajes almacenados en SQLite.
 
-### Manual rapido + Manual completo
-- El dashboard muestra pasos rapidos.
-- `Abrir manual completo` descarga/abre este documento.
+### E) Preferencias UI
+- `Idioma`: Espanol / English.
+- `Color`: Oceano / Ambar / Grafito.
+- Ambas opciones se guardan en el navegador.
 
-### Idioma
-- Selector `Idioma`:
-  - `Español` / `English`
-  - Guarda preferencia en el navegador.
-
-### Color
-- Selector `Color`:
-  - `Oceano`, `Ambar`, `Grafito`
-  - Guarda preferencia en el navegador.
-
-## 5) Secciones de monitoreo
-- `Configured Targets`: targets definidos en config.
+## 5) Bloques informativos
+- `Configured Targets`: targets cargados desde config.
 - `Paths`: rutas activas de DB/config/env.
-- `Targets Stats`: conteo de mensajes por target y ultimo scrapeo.
-- `Recent Runs`: historial de ejecuciones.
+- `Targets Stats`: volumen por target y ultimo scrapeo.
+- `Recent Runs`: historial de corridas.
 
 ## 6) Buenas practicas
-- Respeta limites de Telegram (el sistema maneja FloodWait + backoff).
-- Evita backfills grandes frecuentes.
-- No usar para evadir privados ni spam.
+- Ejecuta siempre `Dry-run` antes del primer scrape real.
+- Evita backfills muy grandes en horarios cortos.
+- Respeta FloodWait y limites de plataforma.
+- No intentes acceso no autorizado ni automatizacion de spam.
 
-## 7) Notas para Vercel
-- En runtime serverless, la app usa `/tmp` para DB/sesion/log/export por defecto.
-- `/tmp` es efimero: puede perderse entre invocaciones.
-- Para persistencia real, usar infraestructura con storage persistente.
-
+## 7) Nota para Vercel
+- En serverless, el sistema usa `/tmp` por defecto.
+- `/tmp` es efimero: sesion y DB pueden resetearse entre invocaciones.
+- Para persistencia real, usa infraestructura con storage persistente.

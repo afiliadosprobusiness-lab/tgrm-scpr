@@ -17,7 +17,7 @@
 - `app/web.py`: Flask routes for dashboard, scrape trigger, exports and health
 - `app/templates/dashboard.html`: dashboard UI
 - `app/static/app.css`: responsive visual styles
-- `app/static/dashboard.js`: i18n + theme switch persistence (localStorage)
+- `app/static/dashboard.js`: i18n + theme + platform navigation + filter preview state
 - `api/index.py`: Vercel serverless entrypoint
 - `vercel.json`: Vercel routing/build config
 - `docs/MANUAL.md`: user-facing operation manual
@@ -88,9 +88,18 @@
 - `GET /api/stats`: JSON stats endpoint.
 
 ## UX/UI behavior
+- Responsive top navbar with source selection:
+  - `telegram`
+  - `google_maps`
+  - `instagram`
+  - `reddit`
+- Source-level filter builder:
+  - search, niche, has website, has phone, location, rating, verified
+- Filter summary preview in UI for selected source.
 - Theme switch in dashboard:
   - `ocean`, `amber`, `graphite`
 - Language switch in dashboard:
   - `es`, `en`
 - Both preferences persist in browser `localStorage`.
 - Layout remains mobile-first and supports desktop grids and overflow-safe tables.
+- Current backend scraper is active for Telegram only; other sources are UI roadmap placeholders.

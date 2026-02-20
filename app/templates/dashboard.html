@@ -1,35 +1,59 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="es" data-theme="ocean">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title data-i18n="pageTitle">Panel Telegram Scraper</title>
+    <title data-i18n="pageTitle">Multi-Source Scraper Panel</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}" />
   </head>
   <body>
+    <header class="topnav card">
+      <div class="topnav-brand">
+        <p class="eyebrow">Data Intake Workspace</p>
+        <h1 data-i18n="navTitle">Multi-Source Scraper</h1>
+      </div>
+      <button id="menuToggle" class="menu-toggle" type="button" aria-expanded="false" aria-controls="platformNav">
+        <span data-i18n="menuLabel">Plataformas</span>
+      </button>
+      <nav id="platformNav" class="platform-nav" aria-label="Platform Navigation">
+        <button type="button" class="platform-link is-active" data-platform="telegram" data-i18n="navTelegram">
+          Telegram
+        </button>
+        <button type="button" class="platform-link" data-platform="google_maps" data-i18n="navGoogleMaps">
+          Google Maps
+        </button>
+        <button type="button" class="platform-link" data-platform="instagram" data-i18n="navInstagram">
+          Instagram
+        </button>
+        <button type="button" class="platform-link" data-platform="reddit" data-i18n="navReddit">
+          Reddit
+        </button>
+      </nav>
+    </header>
+
     <main class="page">
       <section class="hero card">
         <div class="hero-top">
           <div>
-            <p class="eyebrow">Telegram MTProto</p>
-            <h1 data-i18n="heroTitle">Panel de Control</h1>
+            <p class="eyebrow">Platform Router</p>
+            <h2 data-i18n="heroTitle">Control and Discovery</h2>
             <p class="lede" data-i18n="heroLede">
-              Ejecuta scraping incremental, dry-run, backfill y exportes desde esta interfaz.
+              Pick a source, set filters and run data collection safely.
             </p>
           </div>
-          <div class="toolbar" role="group" aria-label="Preferencias">
+          <div class="toolbar" role="group" aria-label="Preferences">
             <div class="toolbar-field">
               <label for="languageSwitcher" data-i18n="languageLabel">Idioma</label>
               <select id="languageSwitcher" aria-label="Language">
-                <option value="es" data-i18n="langSpanish">Español</option>
+                <option value="es" data-i18n="langSpanish">Espanol</option>
                 <option value="en" data-i18n="langEnglish">English</option>
               </select>
             </div>
             <div class="toolbar-field">
               <label for="themeSwitcher" data-i18n="themeLabel">Color</label>
               <select id="themeSwitcher" aria-label="Theme">
-                <option value="ocean" data-i18n="themeOcean">Océano</option>
-                <option value="amber" data-i18n="themeAmber">Ámbar</option>
+                <option value="ocean" data-i18n="themeOcean">Oceano</option>
+                <option value="amber" data-i18n="themeAmber">Ambar</option>
                 <option value="graphite" data-i18n="themeGraphite">Grafito</option>
               </select>
             </div>
@@ -51,118 +75,236 @@
         </div>
       </section>
 
-      <section class="grid">
-        <article class="card">
-          <h2 data-i18n="scrapeTitle">Ejecutar Scrape</h2>
-          <form action="/scrape" method="post" class="stack">
-            <label for="target" data-i18n="singleTargetLabel">Target único (opcional)</label>
-            <input
-              id="target"
-              name="target"
-              type="text"
-              placeholder="@canal o https://t.me/canal"
-              data-i18n-placeholder="singleTargetPlaceholder"
-              autocomplete="off"
-            />
+      <section class="card source-card">
+        <div class="source-header">
+          <h2 data-i18n="sourceSearchTitle">Source Search and Filters</h2>
+          <span class="platform-badge" id="activePlatformBadge">Telegram</span>
+        </div>
+        <form id="sourceFilterForm" class="source-form">
+          <div class="source-grid">
+            <div class="source-field source-query">
+              <label for="sourceQuery" data-i18n="sourceQueryLabel">Search</label>
+              <input
+                id="sourceQuery"
+                type="text"
+                autocomplete="off"
+                data-i18n-placeholder="sourceQueryPlaceholder"
+                placeholder="Ej: restaurantes vegan en Lima"
+              />
+            </div>
 
-            <label class="check">
-              <input type="checkbox" name="backfill" />
-              <span data-i18n="backfillLabel">Backfill histórico (hasta el límite configurado)</span>
+            <div class="source-field">
+              <label for="sourceNiche" data-i18n="sourceNicheLabel">Business Niche</label>
+              <select id="sourceNiche">
+                <option value="all" data-i18n="nicheAll">All Niches</option>
+                <option value="restaurants" data-i18n="nicheRestaurants">Restaurants</option>
+                <option value="real_estate" data-i18n="nicheRealEstate">Real Estate</option>
+                <option value="legal" data-i18n="nicheLegal">Legal Services</option>
+                <option value="medical" data-i18n="nicheMedical">Medical Clinics</option>
+                <option value="beauty" data-i18n="nicheBeauty">Beauty and Wellness</option>
+              </select>
+            </div>
+
+            <div class="source-field">
+              <label for="hasWebsite" data-i18n="sourceWebsiteLabel">Has Website</label>
+              <select id="hasWebsite">
+                <option value="any" data-i18n="filterAny">Any</option>
+                <option value="yes" data-i18n="filterYes">Yes</option>
+                <option value="no" data-i18n="filterNo">No</option>
+              </select>
+            </div>
+
+            <div class="source-field">
+              <label for="hasPhone" data-i18n="sourcePhoneLabel">Has Phone</label>
+              <select id="hasPhone">
+                <option value="any" data-i18n="filterAny">Any</option>
+                <option value="yes" data-i18n="filterYes">Yes</option>
+                <option value="no" data-i18n="filterNo">No</option>
+              </select>
+            </div>
+
+            <div class="source-field">
+              <label for="sourceLocation" data-i18n="sourceLocationLabel">Location</label>
+              <input
+                id="sourceLocation"
+                type="text"
+                autocomplete="off"
+                data-i18n-placeholder="sourceLocationPlaceholder"
+                placeholder="Ciudad o pais"
+              />
+            </div>
+
+            <div class="source-field">
+              <label for="minRating" data-i18n="sourceRatingLabel">Minimum Rating</label>
+              <select id="minRating">
+                <option value="0" data-i18n="ratingAny">Any</option>
+                <option value="3">3.0+</option>
+                <option value="3.5">3.5+</option>
+                <option value="4">4.0+</option>
+                <option value="4.5">4.5+</option>
+              </select>
+            </div>
+
+            <label class="check source-check">
+              <input id="onlyVerified" type="checkbox" />
+              <span data-i18n="sourceVerifiedLabel">Only verified profiles</span>
             </label>
-            <label class="check">
-              <input type="checkbox" name="dry_run" />
-              <span data-i18n="dryRunLabel">Solo dry-run (resuelve targets, no scrapea)</span>
-            </label>
-            <button type="submit" data-i18n="startScrapeBtn">Iniciar Scrape</button>
-          </form>
-          <p class="hint" data-i18n="scrapeHint">
-            Solo soporta targets públicos o chats a los que tu cuenta tenga acceso legítimo.
+          </div>
+
+          <div class="source-actions">
+            <button type="submit" data-i18n="applyFiltersBtn">Apply Filters</button>
+            <button type="button" id="resetFiltersBtn" class="button-secondary" data-i18n="resetFiltersBtn">
+              Reset
+            </button>
+          </div>
+        </form>
+        <p id="sourceHint" class="hint" data-i18n="sourceHintTelegram">
+          Telegram module is active. Use public channels/groups or chats where your account already has access.
+        </p>
+        <pre id="filterPreview" class="filter-preview" data-i18n="filterPreviewEmpty">Configure filters and click Apply.</pre>
+      </section>
+
+      <section class="platform-panel" data-platform="telegram">
+        <section class="grid">
+          <article class="card">
+            <h2 data-i18n="scrapeTitle">Run Scrape</h2>
+            <form action="/scrape" method="post" class="stack">
+              <label for="target" data-i18n="singleTargetLabel">Single target (optional)</label>
+              <input
+                id="target"
+                name="target"
+                type="text"
+                data-i18n-placeholder="singleTargetPlaceholder"
+                placeholder="@channel or https://t.me/channel"
+                autocomplete="off"
+              />
+
+              <label class="check">
+                <input type="checkbox" name="backfill" />
+                <span data-i18n="backfillLabel">Backfill history (up to configured limit)</span>
+              </label>
+              <label class="check">
+                <input type="checkbox" name="dry_run" />
+                <span data-i18n="dryRunLabel">Dry-run only (resolve targets, do not scrape)</span>
+              </label>
+              <button type="submit" data-i18n="startScrapeBtn">Start Scrape</button>
+            </form>
+            <p class="hint" data-i18n="scrapeHint">
+              Supports public targets or chats your account can access legitimately.
+            </p>
+          </article>
+
+          <article class="card">
+            <h2 data-i18n="exportTitle">Export Messages</h2>
+            <form action="/export" method="post" class="stack">
+              <label for="format" data-i18n="formatLabel">Format</label>
+              <select id="format" name="format">
+                <option value="csv">CSV</option>
+                <option value="json">JSON</option>
+              </select>
+              <button type="submit" data-i18n="downloadBtn">Download Export</button>
+            </form>
+            <p class="hint" data-i18n="exportHint">
+              Exports the complete messages table from SQLite.
+            </p>
+          </article>
+        </section>
+
+        {% if scrape_error %}
+        <section class="card alert error">
+          <h2 data-i18n="scrapeErrorTitle">Scrape Error</h2>
+          <p>{{ scrape_error }}</p>
+        </section>
+        {% endif %}
+
+        {% if scrape_summary %}
+        <section class="card alert ok">
+          <h2 data-i18n="summaryTitle">Last Run Summary</h2>
+          <div class="summary">
+            <span><span data-i18n="summaryModeLabel">Mode</span>: <strong>{{ scrape_summary.mode }}</strong></span>
+            <span><span data-i18n="summaryTargetsOkLabel">Targets OK</span>: <strong>{{ scrape_summary.targets_ok }}/{{ scrape_summary.targets_total }}</strong></span>
+            <span><span data-i18n="summaryTargetsFailedLabel">Targets Failed</span>: <strong>{{ scrape_summary.targets_failed }}</strong></span>
+            <span><span data-i18n="summaryNewMessagesLabel">New Messages</span>: <strong>{{ scrape_summary.messages_new }}</strong></span>
+            <span><span data-i18n="summaryFloodWaitsLabel">Flood Waits</span>: <strong>{{ scrape_summary.flood_waits }}</strong></span>
+          </div>
+
+          {% if scrape_summary.dry_run_items %}
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th data-i18n="dryInput">Input</th>
+                  <th data-i18n="dryTargetId">Target ID</th>
+                  <th data-i18n="dryResolved">Resolved</th>
+                  <th data-i18n="dryLastMessageId">Last Message ID</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in scrape_summary.dry_run_items %}
+                <tr>
+                  <td>{{ item.input_target }}</td>
+                  <td>{{ item.resolved_target_id }}</td>
+                  <td>{{ item.resolved_username or item.resolved_title or "-" }}</td>
+                  <td>{{ item.last_message_id }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% endif %}
+        </section>
+        {% endif %}
+      </section>
+
+      <section class="platform-panel" data-platform="google_maps" hidden>
+        <article class="card integration-card">
+          <h2 data-i18n="integrationTitle">Integration Roadmap</h2>
+          <p data-i18n="mapsComingSoon">
+            Google Maps scraping module is not active yet. The UI filters are ready to define niche, website and phone requirements.
           </p>
         </article>
+      </section>
 
-        <article class="card">
-          <h2 data-i18n="exportTitle">Exportar Mensajes</h2>
-          <form action="/export" method="post" class="stack">
-            <label for="format" data-i18n="formatLabel">Formato</label>
-            <select id="format" name="format">
-              <option value="csv">CSV</option>
-              <option value="json">JSON</option>
-            </select>
-            <button type="submit" data-i18n="downloadBtn">Descargar Export</button>
-          </form>
-          <p class="hint" data-i18n="exportHint">
-            Exporta toda la tabla de mensajes desde SQLite.
+      <section class="platform-panel" data-platform="instagram" hidden>
+        <article class="card integration-card">
+          <h2 data-i18n="integrationTitle">Integration Roadmap</h2>
+          <p data-i18n="instagramComingSoon">
+            Instagram scraping module is not active yet. The UI filters are ready while backend and policy-safe extraction rules are pending.
+          </p>
+        </article>
+      </section>
+
+      <section class="platform-panel" data-platform="reddit" hidden>
+        <article class="card integration-card">
+          <h2 data-i18n="integrationTitle">Integration Roadmap</h2>
+          <p data-i18n="redditComingSoon">
+            Reddit scraping module is not active yet. You can predefine discovery filters and connect a source adapter later.
           </p>
         </article>
       </section>
 
       <section class="card">
-        <h2 data-i18n="manualTitle">Manual rápido</h2>
+        <h2 data-i18n="manualTitle">Quick Manual</h2>
         <ol class="manual-list">
-          <li data-i18n="manualStep1">Configura tus credenciales en `.env`.</li>
-          <li data-i18n="manualStep2">Define `targets` en `config.json`.</li>
-          <li data-i18n="manualStep3">Primero ejecuta `Dry-run` para validar accesos.</li>
-          <li data-i18n="manualStep4">Ejecuta scrape incremental sin backfill para uso diario.</li>
-          <li data-i18n="manualStep5">Usa backfill solo cuando necesites histórico inicial.</li>
-          <li data-i18n="manualStep6">Exporta en CSV/JSON cuando necesites análisis externo.</li>
+          <li data-i18n="manualStep1">Set your credentials in `.env`.</li>
+          <li data-i18n="manualStep2">Define `targets` in `config.json`.</li>
+          <li data-i18n="manualStep3">Run `Dry-run` first to validate access.</li>
+          <li data-i18n="manualStep4">Use incremental scrape for normal operations.</li>
+          <li data-i18n="manualStep5">Use backfill only for initial historical loads.</li>
+          <li data-i18n="manualStep6">Export CSV/JSON for external analysis.</li>
         </ol>
         <a class="manual-link" href="/manual" target="_blank" rel="noopener" data-i18n="manualOpenLink">
-          Abrir manual completo
+          Open full manual
         </a>
       </section>
 
-      {% if scrape_error %}
-      <section class="card alert error">
-        <h2 data-i18n="scrapeErrorTitle">Error de Scrape</h2>
-        <p>{{ scrape_error }}</p>
-      </section>
-      {% endif %}
-
-      {% if scrape_summary %}
-      <section class="card alert ok">
-        <h2 data-i18n="summaryTitle">Resumen de última ejecución</h2>
-        <div class="summary">
-          <span><span data-i18n="summaryModeLabel">Modo</span>: <strong>{{ scrape_summary.mode }}</strong></span>
-          <span><span data-i18n="summaryTargetsOkLabel">Targets OK</span>: <strong>{{ scrape_summary.targets_ok }}/{{ scrape_summary.targets_total }}</strong></span>
-          <span><span data-i18n="summaryTargetsFailedLabel">Targets fallidos</span>: <strong>{{ scrape_summary.targets_failed }}</strong></span>
-          <span><span data-i18n="summaryNewMessagesLabel">Mensajes nuevos</span>: <strong>{{ scrape_summary.messages_new }}</strong></span>
-          <span><span data-i18n="summaryFloodWaitsLabel">Flood waits</span>: <strong>{{ scrape_summary.flood_waits }}</strong></span>
-        </div>
-
-        {% if scrape_summary.dry_run_items %}
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th data-i18n="dryInput">Input</th>
-                <th data-i18n="dryTargetId">Target ID</th>
-                <th data-i18n="dryResolved">Resuelto</th>
-                <th data-i18n="dryLastMessageId">Último Message ID</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for item in scrape_summary.dry_run_items %}
-              <tr>
-                <td>{{ item.input_target }}</td>
-                <td>{{ item.resolved_target_id }}</td>
-                <td>{{ item.resolved_username or item.resolved_title or "-" }}</td>
-                <td>{{ item.last_message_id }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        {% endif %}
-      </section>
-      {% endif %}
-
       <section class="grid">
         <article class="card">
-          <h2 data-i18n="configuredTargetsTitle">Targets configurados</h2>
+          <h2 data-i18n="configuredTargetsTitle">Configured Targets</h2>
           {% if config_error %}
           <p class="small error-text">{{ config_error }}</p>
           {% elif not config_targets %}
-          <p class="small" data-i18n="noTargetsConfigured">No hay targets configurados.</p>
+          <p class="small" data-i18n="noTargetsConfigured">No targets configured.</p>
           {% else %}
           <ul class="list">
             {% for target in config_targets %}
@@ -173,7 +315,7 @@
         </article>
 
         <article class="card">
-          <h2 data-i18n="pathsTitle">Rutas</h2>
+          <h2 data-i18n="pathsTitle">Paths</h2>
           <ul class="list mono">
             <li>DB: {{ db_path }}</li>
             <li>Config: {{ config_path }}</li>
@@ -183,9 +325,9 @@
       </section>
 
       <section class="card">
-        <h2 data-i18n="targetsStatsTitle">Estadísticas de targets</h2>
+        <h2 data-i18n="targetsStatsTitle">Targets Stats</h2>
         {% if not target_rows %}
-        <p class="small" data-i18n="noTargetData">Aún no hay datos de targets.</p>
+        <p class="small" data-i18n="noTargetData">No target data yet.</p>
         {% else %}
         <div class="table-wrap">
           <table>
@@ -193,9 +335,9 @@
               <tr>
                 <th data-i18n="tableTarget">Target</th>
                 <th data-i18n="tableTargetId">Target ID</th>
-                <th data-i18n="tableMessages">Mensajes</th>
-                <th data-i18n="tableLastMessageId">Último Message ID</th>
-                <th data-i18n="tableLastScrapedAt">Último scrapeo</th>
+                <th data-i18n="tableMessages">Messages</th>
+                <th data-i18n="tableLastMessageId">Last Message ID</th>
+                <th data-i18n="tableLastScrapedAt">Last Scraped At</th>
               </tr>
             </thead>
             <tbody>
@@ -215,21 +357,21 @@
       </section>
 
       <section class="card">
-        <h2 data-i18n="recentRunsTitle">Ejecuciones recientes</h2>
+        <h2 data-i18n="recentRunsTitle">Recent Runs</h2>
         {% if not recent_runs %}
-        <p class="small" data-i18n="noRunsRegistered">No hay ejecuciones registradas.</p>
+        <p class="small" data-i18n="noRunsRegistered">No runs registered.</p>
         {% else %}
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
                 <th>ID</th>
-                <th data-i18n="tableMode">Modo</th>
-                <th data-i18n="tableTargetFilter">Filtro target</th>
+                <th data-i18n="tableMode">Mode</th>
+                <th data-i18n="tableTargetFilter">Target Filter</th>
                 <th data-i18n="tableTargetsOk">Targets OK</th>
-                <th data-i18n="tableMessagesNew">Mensajes nuevos</th>
-                <th data-i18n="tableFloodWaits">Flood waits</th>
-                <th data-i18n="tableFinished">Finalizado</th>
+                <th data-i18n="tableMessagesNew">Messages New</th>
+                <th data-i18n="tableFloodWaits">Flood Waits</th>
+                <th data-i18n="tableFinished">Finished</th>
               </tr>
             </thead>
             <tbody>

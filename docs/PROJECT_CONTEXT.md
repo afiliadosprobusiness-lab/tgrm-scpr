@@ -24,7 +24,14 @@ Operational summary for the Telegram scraper.
 ## UX controls
 - Language switch (`es` / `en`) with browser persistence.
 - Color/theme switch (`ocean` / `amber` / `graphite`) with browser persistence.
+- Source navbar (`telegram`, `google_maps`, `instagram`, `reddit`) with responsive menu.
+- Source filter builder (search, niche, website, phone, location, rating, verified).
+- On-screen filter preview for the currently selected source.
 - User manual available in `docs/MANUAL.md` and route `/manual`.
+
+## Source status
+- Telegram: active backend scraping module.
+- Google Maps / Instagram / Reddit: UI-ready placeholders (backend connector pending).
 
 ## Incremental state
 - last processed id is persisted per target in SQLite (`targets.last_message_id`).

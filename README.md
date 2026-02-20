@@ -12,6 +12,8 @@ Scraper incremental para grupos/canales de Telegram usando cuenta de usuario (MT
 - `--dry-run` para validar targets y ultimo ID sin scrapear.
 - Interfaz web para ejecutar scrape/export y ver estadisticas.
 - Switch de idioma (ES/EN) y color (Oceano/Ambar/Grafito) en la UI.
+- Navbar responsive por fuente (Telegram, Google Maps, Instagram, Reddit).
+- Buscador/filtros por fuente (nicho, web, telefono, ubicacion, rating, verificado).
 - Manual de uso incluido en `docs/MANUAL.md` y accesible por `/manual`.
 
 ## Restricciones de cumplimiento
@@ -169,7 +171,12 @@ Desde UI puedes:
 - exportar CSV/JSON
 - ver stats por target y runs recientes
 - cambiar idioma y tema de color
+- seleccionar fuente en navbar y definir filtros por fuente
 - abrir el manual desde el boton `Abrir manual completo`
+
+Estado de fuentes:
+- Telegram: backend activo.
+- Google Maps / Instagram / Reddit: UI lista, backend pendiente.
 
 Manual:
 - Archivo: `docs/MANUAL.md`

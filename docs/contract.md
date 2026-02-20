@@ -128,12 +128,19 @@ Validation rules:
 
 ## Frontend UI contract
 - Dashboard includes:
+  - source navbar tabs (`telegram`, `google_maps`, `instagram`, `reddit`)
+  - source filter builder (search, niche, has website, has phone, location, min rating, verified)
+  - filter summary preview panel
   - language switch (`es`, `en`)
   - color theme switch (`ocean`, `amber`, `graphite`)
 - Preference persistence:
   - browser `localStorage` keys:
     - `dashboard-language`
     - `dashboard-theme`
+    - `dashboard-platform`
+- Source backend availability:
+  - `telegram`: active
+  - `google_maps`, `instagram`, `reddit`: placeholder UI state (no backend extraction yet)
 
 ## Changelog del Contrato
 - 2026-02-20
@@ -155,3 +162,8 @@ Validation rules:
 - Cambio: agregado endpoint `/manual` y contrato UI para switches de idioma/color.
 - Tipo: non-breaking
 - Impacto: mejora usabilidad del dashboard y soporte bilingue.
+
+- 2026-02-20
+- Cambio: agregado navbar por fuente y filtro multi-criterio de negocios en la UI.
+- Tipo: non-breaking
+- Impacto: prepara extension multi-fuente sin romper scraping Telegram existente.
