@@ -188,6 +188,7 @@ vercel
 Nota de arquitectura serverless:
 - En Vercel, `/tmp` es efimero. DB y sesion pueden perderse entre invocaciones.
 - Para persistencia real (produccion), usa un host con disco persistente o un backend dedicado.
+- La app ya usa `/tmp` por defecto en Vercel para DB/log/export/session si no defines overrides.
 
 ## Notas tecnicas
 - Paginacion incremental: `iter_messages(..., min_id=last_message_id, reverse=True)`.

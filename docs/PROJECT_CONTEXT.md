@@ -38,3 +38,4 @@ Operational summary for the Telegram scraper.
 - For serverless runtime, prefer env path overrides to `/tmp`:
   - `SCRAPER_DB_PATH=/tmp/telegram_scraper.db`
   - `TELEGRAM_SESSION_NAME=/tmp/telegram_user_session`
+- App default already falls back to `/tmp` in Vercel when those vars are not set.

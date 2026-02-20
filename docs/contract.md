@@ -118,6 +118,8 @@ Validation rules:
 - `SCRAPER_ENV_FILE` (optional env file path override)
 - `SCRAPER_LOG_FILE` (optional log path override)
 - `SCRAPER_EXPORTS_PATH` (optional export path override)
+- Runtime default behavior:
+  - if `VERCEL` is present, defaults use `/tmp` for DB/log/exports/session.
 
 ## Changelog del Contrato
 - 2026-02-20
@@ -129,3 +131,8 @@ Validation rules:
 - Cambio: agregado contrato web (Flask) y comando CLI `web`.
 - Tipo: non-breaking
 - Impacto: habilita UI visual y despliegue serverless (Vercel) manteniendo compatibilidad CLI.
+
+- 2026-02-20
+- Cambio: fallback automatico a rutas `/tmp` en Vercel para evitar errores de filesystem read-only.
+- Tipo: non-breaking
+- Impacto: reduce `FUNCTION_INVOCATION_FAILED` por escrituras en rutas no permitidas.

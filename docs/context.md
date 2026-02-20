@@ -58,6 +58,7 @@
   - `SCRAPER_ENV_FILE` (optional path override)
   - `SCRAPER_LOG_FILE` (optional path override)
   - `SCRAPER_EXPORTS_PATH` (optional path override)
+  - In Vercel runtime, defaults automatically point to `/tmp` for session, DB, logs and exports.
 - `config.json`:
   - `targets: string[]`
   - `scrape.limit_per_target: int`

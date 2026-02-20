@@ -22,13 +22,16 @@ def _build_paths(
     env_path: Path | None,
     log_path: Path | None,
 ) -> dict[str, Path]:
-    vercel_default_db = Path("/tmp/telegram_scraper.db") if os.getenv("VERCEL") else Path("data/telegram_scraper.db")
+    is_vercel = bool(os.getenv("VERCEL"))
+    vercel_default_db = Path("/tmp/telegram_scraper.db") if is_vercel else Path("data/telegram_scraper.db")
+    vercel_default_log = Path("/tmp/app.log") if is_vercel else Path("logs/app.log")
+    vercel_default_exports = Path("/tmp/exports") if is_vercel else Path("exports")
     return {
         "config_path": Path(os.getenv("SCRAPER_CONFIG_PATH", str(config_path or "config.json"))),
         "db_path": Path(os.getenv("SCRAPER_DB_PATH", str(db_path or vercel_default_db))),
         "env_path": Path(os.getenv("SCRAPER_ENV_FILE", str(env_path or ".env"))),
-        "log_path": Path(os.getenv("SCRAPER_LOG_FILE", str(log_path or "logs/app.log"))),
-        "exports_dir": Path(os.getenv("SCRAPER_EXPORTS_PATH", "exports")),
+        "log_path": Path(os.getenv("SCRAPER_LOG_FILE", str(log_path or vercel_default_log))),
+        "exports_dir": Path(os.getenv("SCRAPER_EXPORTS_PATH", str(vercel_default_exports))),
     }
 
 
@@ -183,4 +186,3 @@ async def _execute_scrape(
     finally:
         await client_manager.disconnect()
         storage.close()
-

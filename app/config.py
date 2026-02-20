@@ -127,7 +127,8 @@ def load_telegram_settings(env_path: Path | None = None) -> TelegramSettings:
 
     api_id_raw = os.getenv("TELEGRAM_API_ID")
     api_hash = os.getenv("TELEGRAM_API_HASH")
-    session_name = os.getenv("TELEGRAM_SESSION_NAME", "telegram_user_session")
+    default_session = "/tmp/telegram_user_session" if os.getenv("VERCEL") else "telegram_user_session"
+    session_name = os.getenv("TELEGRAM_SESSION_NAME", default_session)
 
     if not api_id_raw:
         raise ValueError("Missing TELEGRAM_API_ID in environment.")
