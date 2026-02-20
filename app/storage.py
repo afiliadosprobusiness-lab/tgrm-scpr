@@ -31,6 +31,12 @@ class Storage:
         self.conn.row_factory = sqlite3.Row
         self.conn.execute("PRAGMA foreign_keys = ON;")
 
+    def __enter__(self) -> "Storage":
+        return self
+
+    def __exit__(self, exc_type, exc, tb) -> None:
+        self.close()
+
     def close(self) -> None:
         self.conn.close()
 
@@ -239,4 +245,3 @@ class Storage:
             (limit,),
         ).fetchall()
         return [dict(row) for row in rows]
-

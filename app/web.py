@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from flask import Flask, jsonify, render_template, request, send_file
+from flask import Flask, Response, jsonify, render_template, request, send_file
 
 from .config import load_app_config, load_telegram_settings
 from .exporters import export_messages
@@ -110,6 +110,10 @@ def create_app(
     @app.get("/health")
     def health():
         return jsonify({"status": "ok"})
+
+    @app.get("/favicon.ico")
+    def favicon():
+        return Response(status=204)
 
     @app.get("/api/stats")
     def api_stats():
