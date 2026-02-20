@@ -11,6 +11,8 @@ Scraper incremental para grupos/canales de Telegram usando cuenta de usuario (MT
 - Manejo de `FloodWaitError`, reintentos con backoff y pausas aleatorias.
 - `--dry-run` para validar targets y ultimo ID sin scrapear.
 - Interfaz web para ejecutar scrape/export y ver estadisticas.
+- Switch de idioma (ES/EN) y color (Oceano/Ambar/Grafito) en la UI.
+- Manual de uso incluido en `docs/MANUAL.md` y accesible por `/manual`.
 
 ## Restricciones de cumplimiento
 - Solo canales/grupos publicos o chats donde tu cuenta ya tenga acceso legitimo.
@@ -166,6 +168,12 @@ Desde UI puedes:
 - lanzar scrape incremental/backfill/dry-run
 - exportar CSV/JSON
 - ver stats por target y runs recientes
+- cambiar idioma y tema de color
+- abrir el manual desde el boton `Abrir manual completo`
+
+Manual:
+- Archivo: `docs/MANUAL.md`
+- Ruta web: `GET /manual`
 
 ## 8) Deploy en Vercel
 Este repo ya incluye `vercel.json` y entrypoint `api/index.py`.

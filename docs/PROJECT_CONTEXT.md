@@ -18,7 +18,13 @@ Operational summary for the Telegram scraper.
 - `POST /scrape`
 - `POST /export`
 - `GET /health`
+- `GET /manual`
 - `GET /api/stats`
+
+## UX controls
+- Language switch (`es` / `en`) with browser persistence.
+- Color/theme switch (`ocean` / `amber` / `graphite`) with browser persistence.
+- User manual available in `docs/MANUAL.md` and route `/manual`.
 
 ## Incremental state
 - last processed id is persisted per target in SQLite (`targets.last_message_id`).

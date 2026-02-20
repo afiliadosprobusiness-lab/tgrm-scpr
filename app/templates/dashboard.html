@@ -1,30 +1,51 @@
 <!doctype html>
-<html lang="en">
+<html lang="es" data-theme="ocean">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Telegram Scraper Dashboard</title>
+    <title data-i18n="pageTitle">Panel Telegram Scraper</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}" />
   </head>
   <body>
     <main class="page">
       <section class="hero card">
-        <p class="eyebrow">Telegram MTProto</p>
-        <h1>Scraper Control Panel</h1>
-        <p class="lede">
-          Run incremental scraping, dry-runs, backfills, and exports from a visual dashboard.
-        </p>
+        <div class="hero-top">
+          <div>
+            <p class="eyebrow">Telegram MTProto</p>
+            <h1 data-i18n="heroTitle">Panel de Control</h1>
+            <p class="lede" data-i18n="heroLede">
+              Ejecuta scraping incremental, dry-run, backfill y exportes desde esta interfaz.
+            </p>
+          </div>
+          <div class="toolbar" role="group" aria-label="Preferencias">
+            <div class="toolbar-field">
+              <label for="languageSwitcher" data-i18n="languageLabel">Idioma</label>
+              <select id="languageSwitcher" aria-label="Language">
+                <option value="es" data-i18n="langSpanish">Español</option>
+                <option value="en" data-i18n="langEnglish">English</option>
+              </select>
+            </div>
+            <div class="toolbar-field">
+              <label for="themeSwitcher" data-i18n="themeLabel">Color</label>
+              <select id="themeSwitcher" aria-label="Theme">
+                <option value="ocean" data-i18n="themeOcean">Océano</option>
+                <option value="amber" data-i18n="themeAmber">Ámbar</option>
+                <option value="graphite" data-i18n="themeGraphite">Grafito</option>
+              </select>
+            </div>
+          </div>
+        </div>
         <div class="metrics">
           <article>
-            <span class="label">Targets in DB</span>
+            <span class="label" data-i18n="metricTargetsDb">Targets en DB</span>
             <strong>{{ total_targets }}</strong>
           </article>
           <article>
-            <span class="label">Messages Stored</span>
+            <span class="label" data-i18n="metricMessagesStored">Mensajes guardados</span>
             <strong>{{ total_messages }}</strong>
           </article>
           <article>
-            <span class="label">Config Targets</span>
+            <span class="label" data-i18n="metricConfigTargets">Targets configurados</span>
             <strong>{{ config_targets | length }}</strong>
           </article>
         </div>
@@ -32,64 +53,80 @@
 
       <section class="grid">
         <article class="card">
-          <h2>Run Scrape</h2>
+          <h2 data-i18n="scrapeTitle">Ejecutar Scrape</h2>
           <form action="/scrape" method="post" class="stack">
-            <label for="target">Single target (optional)</label>
+            <label for="target" data-i18n="singleTargetLabel">Target único (opcional)</label>
             <input
               id="target"
               name="target"
               type="text"
-              placeholder="@channel or https://t.me/channel"
+              placeholder="@canal o https://t.me/canal"
+              data-i18n-placeholder="singleTargetPlaceholder"
               autocomplete="off"
             />
 
             <label class="check">
               <input type="checkbox" name="backfill" />
-              Backfill history (up to configured limit)
+              <span data-i18n="backfillLabel">Backfill histórico (hasta el límite configurado)</span>
             </label>
             <label class="check">
               <input type="checkbox" name="dry_run" />
-              Dry-run only (resolve targets, do not scrape)
+              <span data-i18n="dryRunLabel">Solo dry-run (resuelve targets, no scrapea)</span>
             </label>
-            <button type="submit">Start Scrape</button>
+            <button type="submit" data-i18n="startScrapeBtn">Iniciar Scrape</button>
           </form>
-          <p class="hint">
-            Supports public targets or chats your account can access legitimately.
+          <p class="hint" data-i18n="scrapeHint">
+            Solo soporta targets públicos o chats a los que tu cuenta tenga acceso legítimo.
           </p>
         </article>
 
         <article class="card">
-          <h2>Export Messages</h2>
+          <h2 data-i18n="exportTitle">Exportar Mensajes</h2>
           <form action="/export" method="post" class="stack">
-            <label for="format">Format</label>
+            <label for="format" data-i18n="formatLabel">Formato</label>
             <select id="format" name="format">
               <option value="csv">CSV</option>
               <option value="json">JSON</option>
             </select>
-            <button type="submit">Download Export</button>
+            <button type="submit" data-i18n="downloadBtn">Descargar Export</button>
           </form>
-          <p class="hint">
-            Exports complete messages table from SQLite.
+          <p class="hint" data-i18n="exportHint">
+            Exporta toda la tabla de mensajes desde SQLite.
           </p>
         </article>
       </section>
 
+      <section class="card">
+        <h2 data-i18n="manualTitle">Manual rápido</h2>
+        <ol class="manual-list">
+          <li data-i18n="manualStep1">Configura tus credenciales en `.env`.</li>
+          <li data-i18n="manualStep2">Define `targets` en `config.json`.</li>
+          <li data-i18n="manualStep3">Primero ejecuta `Dry-run` para validar accesos.</li>
+          <li data-i18n="manualStep4">Ejecuta scrape incremental sin backfill para uso diario.</li>
+          <li data-i18n="manualStep5">Usa backfill solo cuando necesites histórico inicial.</li>
+          <li data-i18n="manualStep6">Exporta en CSV/JSON cuando necesites análisis externo.</li>
+        </ol>
+        <a class="manual-link" href="/manual" target="_blank" rel="noopener" data-i18n="manualOpenLink">
+          Abrir manual completo
+        </a>
+      </section>
+
       {% if scrape_error %}
       <section class="card alert error">
-        <h2>Scrape Error</h2>
+        <h2 data-i18n="scrapeErrorTitle">Error de Scrape</h2>
         <p>{{ scrape_error }}</p>
       </section>
       {% endif %}
 
       {% if scrape_summary %}
       <section class="card alert ok">
-        <h2>Last Run Summary</h2>
+        <h2 data-i18n="summaryTitle">Resumen de última ejecución</h2>
         <div class="summary">
-          <span>Mode: <strong>{{ scrape_summary.mode }}</strong></span>
-          <span>Targets OK: <strong>{{ scrape_summary.targets_ok }}/{{ scrape_summary.targets_total }}</strong></span>
-          <span>Targets Failed: <strong>{{ scrape_summary.targets_failed }}</strong></span>
-          <span>New Messages: <strong>{{ scrape_summary.messages_new }}</strong></span>
-          <span>Flood Waits: <strong>{{ scrape_summary.flood_waits }}</strong></span>
+          <span><span data-i18n="summaryModeLabel">Modo</span>: <strong>{{ scrape_summary.mode }}</strong></span>
+          <span><span data-i18n="summaryTargetsOkLabel">Targets OK</span>: <strong>{{ scrape_summary.targets_ok }}/{{ scrape_summary.targets_total }}</strong></span>
+          <span><span data-i18n="summaryTargetsFailedLabel">Targets fallidos</span>: <strong>{{ scrape_summary.targets_failed }}</strong></span>
+          <span><span data-i18n="summaryNewMessagesLabel">Mensajes nuevos</span>: <strong>{{ scrape_summary.messages_new }}</strong></span>
+          <span><span data-i18n="summaryFloodWaitsLabel">Flood waits</span>: <strong>{{ scrape_summary.flood_waits }}</strong></span>
         </div>
 
         {% if scrape_summary.dry_run_items %}
@@ -97,10 +134,10 @@
           <table>
             <thead>
               <tr>
-                <th>Input</th>
-                <th>Target ID</th>
-                <th>Resolved</th>
-                <th>Last Message ID</th>
+                <th data-i18n="dryInput">Input</th>
+                <th data-i18n="dryTargetId">Target ID</th>
+                <th data-i18n="dryResolved">Resuelto</th>
+                <th data-i18n="dryLastMessageId">Último Message ID</th>
               </tr>
             </thead>
             <tbody>
@@ -121,11 +158,11 @@
 
       <section class="grid">
         <article class="card">
-          <h2>Configured Targets</h2>
+          <h2 data-i18n="configuredTargetsTitle">Targets configurados</h2>
           {% if config_error %}
           <p class="small error-text">{{ config_error }}</p>
           {% elif not config_targets %}
-          <p class="small">No targets configured.</p>
+          <p class="small" data-i18n="noTargetsConfigured">No hay targets configurados.</p>
           {% else %}
           <ul class="list">
             {% for target in config_targets %}
@@ -136,7 +173,7 @@
         </article>
 
         <article class="card">
-          <h2>Paths</h2>
+          <h2 data-i18n="pathsTitle">Rutas</h2>
           <ul class="list mono">
             <li>DB: {{ db_path }}</li>
             <li>Config: {{ config_path }}</li>
@@ -146,19 +183,19 @@
       </section>
 
       <section class="card">
-        <h2>Targets Stats</h2>
+        <h2 data-i18n="targetsStatsTitle">Estadísticas de targets</h2>
         {% if not target_rows %}
-        <p class="small">No target data yet.</p>
+        <p class="small" data-i18n="noTargetData">Aún no hay datos de targets.</p>
         {% else %}
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Target</th>
-                <th>Target ID</th>
-                <th>Messages</th>
-                <th>Last Message ID</th>
-                <th>Last Scraped At</th>
+                <th data-i18n="tableTarget">Target</th>
+                <th data-i18n="tableTargetId">Target ID</th>
+                <th data-i18n="tableMessages">Mensajes</th>
+                <th data-i18n="tableLastMessageId">Último Message ID</th>
+                <th data-i18n="tableLastScrapedAt">Último scrapeo</th>
               </tr>
             </thead>
             <tbody>
@@ -178,21 +215,21 @@
       </section>
 
       <section class="card">
-        <h2>Recent Runs</h2>
+        <h2 data-i18n="recentRunsTitle">Ejecuciones recientes</h2>
         {% if not recent_runs %}
-        <p class="small">No runs registered.</p>
+        <p class="small" data-i18n="noRunsRegistered">No hay ejecuciones registradas.</p>
         {% else %}
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Mode</th>
-                <th>Target filter</th>
-                <th>Targets OK</th>
-                <th>Messages New</th>
-                <th>Flood Waits</th>
-                <th>Finished</th>
+                <th data-i18n="tableMode">Modo</th>
+                <th data-i18n="tableTargetFilter">Filtro target</th>
+                <th data-i18n="tableTargetsOk">Targets OK</th>
+                <th data-i18n="tableMessagesNew">Mensajes nuevos</th>
+                <th data-i18n="tableFloodWaits">Flood waits</th>
+                <th data-i18n="tableFinished">Finalizado</th>
               </tr>
             </thead>
             <tbody>
@@ -213,6 +250,6 @@
         {% endif %}
       </section>
     </main>
+    <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
   </body>
 </html>
-

@@ -17,8 +17,10 @@
 - `app/web.py`: Flask routes for dashboard, scrape trigger, exports and health
 - `app/templates/dashboard.html`: dashboard UI
 - `app/static/app.css`: responsive visual styles
+- `app/static/dashboard.js`: i18n + theme switch persistence (localStorage)
 - `api/index.py`: Vercel serverless entrypoint
 - `vercel.json`: Vercel routing/build config
+- `docs/MANUAL.md`: user-facing operation manual
 
 ## Data model
 - `targets`:
@@ -58,6 +60,7 @@
   - `SCRAPER_ENV_FILE` (optional path override)
   - `SCRAPER_LOG_FILE` (optional path override)
   - `SCRAPER_EXPORTS_PATH` (optional path override)
+  - `SCRAPER_MANUAL_PATH` (optional manual file path override)
   - In Vercel runtime, defaults automatically point to `/tmp` for session, DB, logs and exports.
 - `config.json`:
   - `targets: string[]`
@@ -81,4 +84,13 @@
 - `POST /scrape`: executes incremental/backfill/dry-run from UI.
 - `POST /export`: exports current DB rows and returns attachment.
 - `GET /health`: health probe endpoint.
+- `GET /manual`: serves manual file for end users.
 - `GET /api/stats`: JSON stats endpoint.
+
+## UX/UI behavior
+- Theme switch in dashboard:
+  - `ocean`, `amber`, `graphite`
+- Language switch in dashboard:
+  - `es`, `en`
+- Both preferences persist in browser `localStorage`.
+- Layout remains mobile-first and supports desktop grids and overflow-safe tables.

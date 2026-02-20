@@ -102,7 +102,11 @@ Validation rules:
 {"status":"ok"}
 ```
 
-5. `GET /api/stats`
+5. `GET /manual`
+- Serves `docs/MANUAL.md` (text/markdown) if available.
+- Response: `404` if file does not exist.
+
+6. `GET /api/stats`
 - Response JSON:
 ```json
 {
@@ -118,8 +122,18 @@ Validation rules:
 - `SCRAPER_ENV_FILE` (optional env file path override)
 - `SCRAPER_LOG_FILE` (optional log path override)
 - `SCRAPER_EXPORTS_PATH` (optional export path override)
+- `SCRAPER_MANUAL_PATH` (optional manual file path override)
 - Runtime default behavior:
   - if `VERCEL` is present, defaults use `/tmp` for DB/log/exports/session.
+
+## Frontend UI contract
+- Dashboard includes:
+  - language switch (`es`, `en`)
+  - color theme switch (`ocean`, `amber`, `graphite`)
+- Preference persistence:
+  - browser `localStorage` keys:
+    - `dashboard-language`
+    - `dashboard-theme`
 
 ## Changelog del Contrato
 - 2026-02-20
@@ -136,3 +150,8 @@ Validation rules:
 - Cambio: fallback automatico a rutas `/tmp` en Vercel para evitar errores de filesystem read-only.
 - Tipo: non-breaking
 - Impacto: reduce `FUNCTION_INVOCATION_FAILED` por escrituras en rutas no permitidas.
+
+- 2026-02-20
+- Cambio: agregado endpoint `/manual` y contrato UI para switches de idioma/color.
+- Tipo: non-breaking
+- Impacto: mejora usabilidad del dashboard y soporte bilingue.

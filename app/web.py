@@ -22,16 +22,25 @@ def _build_paths(
     env_path: Path | None,
     log_path: Path | None,
 ) -> dict[str, Path]:
+    project_root = Path(__file__).resolve().parent.parent
+
+    def normalize_path(raw_path: str | Path) -> Path:
+        value = Path(raw_path)
+        if value.is_absolute():
+            return value
+        return (project_root / value).resolve()
+
     is_vercel = bool(os.getenv("VERCEL"))
     vercel_default_db = Path("/tmp/telegram_scraper.db") if is_vercel else Path("data/telegram_scraper.db")
     vercel_default_log = Path("/tmp/app.log") if is_vercel else Path("logs/app.log")
     vercel_default_exports = Path("/tmp/exports") if is_vercel else Path("exports")
     return {
-        "config_path": Path(os.getenv("SCRAPER_CONFIG_PATH", str(config_path or "config.json"))),
-        "db_path": Path(os.getenv("SCRAPER_DB_PATH", str(db_path or vercel_default_db))),
-        "env_path": Path(os.getenv("SCRAPER_ENV_FILE", str(env_path or ".env"))),
-        "log_path": Path(os.getenv("SCRAPER_LOG_FILE", str(log_path or vercel_default_log))),
-        "exports_dir": Path(os.getenv("SCRAPER_EXPORTS_PATH", str(vercel_default_exports))),
+        "config_path": normalize_path(os.getenv("SCRAPER_CONFIG_PATH", str(config_path or "config.json"))),
+        "db_path": normalize_path(os.getenv("SCRAPER_DB_PATH", str(db_path or vercel_default_db))),
+        "env_path": normalize_path(os.getenv("SCRAPER_ENV_FILE", str(env_path or ".env"))),
+        "log_path": normalize_path(os.getenv("SCRAPER_LOG_FILE", str(log_path or vercel_default_log))),
+        "exports_dir": normalize_path(os.getenv("SCRAPER_EXPORTS_PATH", str(vercel_default_exports))),
+        "manual_path": normalize_path(os.getenv("SCRAPER_MANUAL_PATH", "docs/MANUAL.md")),
     }
 
 
@@ -110,6 +119,13 @@ def create_app(
     @app.get("/health")
     def health():
         return jsonify({"status": "ok"})
+
+    @app.get("/manual")
+    def manual():
+        manual_path: Path = app.config["manual_path"]
+        if manual_path.exists():
+            return send_file(manual_path, mimetype="text/markdown; charset=utf-8")
+        return Response("Manual not found.", status=404)
 
     @app.get("/favicon.ico")
     def favicon():
