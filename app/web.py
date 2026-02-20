@@ -329,6 +329,8 @@ def _is_client_error(message: str) -> bool:
         "invalid key",
         "invalid_request",
         "unauthorized",
+        "blocked in this runtime",
+        "oauth authentication failed",
     )
     return any(fragment in normalized for fragment in fragments)
 

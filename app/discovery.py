@@ -76,6 +76,8 @@ class DiscoveryService:
                 "invalid key",
                 "invalid_request",
                 "unauthorized",
+                "blocked in this runtime",
+                "oauth authentication failed",
             )
             if normalized_error.startswith("missing ") or any(
                 fragment in normalized_error for fragment in expected_error_fragments
@@ -115,7 +117,11 @@ def _resolve_source_client(source: str, credentials: dict[str, str] | None = Non
     if source == "google_maps":
         return GoogleMapsSource(api_key=_get_credential(credential_data, "api_key"))
     if source == "reddit":
-        return RedditSource(user_agent=_get_credential(credential_data, "user_agent"))
+        return RedditSource(
+            user_agent=_get_credential(credential_data, "user_agent"),
+            client_id=_get_credential(credential_data, "client_id"),
+            client_secret=_get_credential(credential_data, "client_secret"),
+        )
     raise ValueError(f"Unsupported source: {source}")
 
 

@@ -96,6 +96,9 @@ TELEGRAM_SESSION_NAME=telegram_user_session
 # TELEGRAM_STRING_SESSION=your_telethon_string_session
 GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 REDDIT_USER_AGENT=proyectos-sass-scraper/1.0 (by u/your_reddit_user)
+# Optional but recommended for production/serverless Reddit discovery:
+# REDDIT_CLIENT_ID=your_reddit_client_id
+# REDDIT_CLIENT_SECRET=your_reddit_client_secret
 FLASK_SECRET_KEY=change_me_for_web_ui
 ```
 
@@ -181,7 +184,7 @@ Desde UI puedes:
 Estado de fuentes:
 - Telegram: backend activo.
 - Google Maps: discovery activo via Google Places API.
-- Reddit: discovery activo via JSON publico.
+- Reddit: discovery activo (OAuth oficial cuando hay credenciales, fallback JSON publico).
 
 Manual:
 - Archivo: `docs/MANUAL.md`
@@ -196,6 +199,7 @@ Variables recomendadas en Vercel:
 - `TELEGRAM_STRING_SESSION` (recomendado para que `POST /scrape` funcione sin login interactivo)
 - `GOOGLE_MAPS_API_KEY` (si usaras Google Maps)
 - `REDDIT_USER_AGENT` (si usaras Reddit)
+- `REDDIT_CLIENT_ID` y `REDDIT_CLIENT_SECRET` (recomendado en Vercel para evitar bloqueos 403 en endpoint publico)
 - `TELEGRAM_SESSION_NAME=/tmp/telegram_user_session`
 - `SCRAPER_DB_PATH=/tmp/telegram_scraper.db`
 - `SCRAPER_LOG_FILE=/tmp/app.log`

@@ -40,6 +40,7 @@ SOURCE_CAPABILITIES: dict[str, dict[str, Any]] = {
         "credential_param": "user_agent",
         "credential_env": "REDDIT_USER_AGENT",
         "credential_label": "Reddit User-Agent",
+        "oauth_envs": ["REDDIT_CLIENT_ID", "REDDIT_CLIENT_SECRET"],
     },
 }
 
@@ -60,6 +61,12 @@ def get_platform_capabilities_with_runtime() -> dict[str, dict[str, Any]]:
         env_name = values.get("credential_env")
         if not env_name:
             values["configured"] = True
-            continue
-        values["configured"] = bool((os.getenv(env_name) or "").strip())
+        else:
+            values["configured"] = bool((os.getenv(env_name) or "").strip())
+
+        oauth_envs = values.get("oauth_envs") or []
+        values["oauth_configured"] = bool(
+            oauth_envs
+            and all(bool((os.getenv(name) or "").strip()) for name in oauth_envs)
+        )
     return runtime_caps

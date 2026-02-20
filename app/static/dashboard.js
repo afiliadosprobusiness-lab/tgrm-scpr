@@ -56,7 +56,8 @@
       sourceHintGoogleMaps: "Google Maps activo. La busqueda usa Google Places API con filtros.",
       sourceHintOpenStreetMap:
         "OpenStreetMap activo. Discovery usa Nominatim y Overpass con filtros de negocio.",
-      sourceHintReddit: "Reddit activo. La busqueda usa endpoints JSON publicos con filtros.",
+      sourceHintReddit:
+        "Reddit activo. Usa OAuth oficial cuando hay client_id/client_secret; si no, intenta endpoint publico.",
       sourceHintFoursquare: "Foursquare activo. Discovery usa Places API con filtros de negocio.",
       sourceHintYelp: "Yelp activo. Discovery usa Fusion API con filtros y ubicacion.",
       sourceHintTomTom: "TomTom activo. Discovery usa Search API con filtros de negocio.",
@@ -75,7 +76,7 @@
       integrationTitle: "Estado de integracion",
       mapsActiveHint: "Google Maps discovery activo via Google Places API.",
       osmActiveHint: "OpenStreetMap discovery activo via Nominatim y Overpass.",
-      redditActiveHint: "Reddit discovery activo via JSON publico.",
+      redditActiveHint: "Reddit discovery activo con OAuth oficial (fallback publico).",
       foursquareActiveHint: "Foursquare discovery activo via Places API.",
       yelpActiveHint: "Yelp discovery activo via Fusion API oficial.",
       tomtomActiveHint: "TomTom discovery activo via Search API.",
@@ -214,7 +215,8 @@
       sourceHintGoogleMaps: "Google Maps is active. Discovery runs with Google Places API and your filters.",
       sourceHintOpenStreetMap:
         "OpenStreetMap is active. Discovery runs with Nominatim and Overpass and your filters.",
-      sourceHintReddit: "Reddit is active. Discovery runs with public JSON endpoints and your filters.",
+      sourceHintReddit:
+        "Reddit is active. Discovery uses official OAuth when client_id/client_secret are configured, with public fallback.",
       sourceHintFoursquare: "Foursquare is active. Discovery runs with Places API and your filters.",
       sourceHintYelp: "Yelp is active. Discovery runs with official Fusion API and your filters.",
       sourceHintTomTom: "TomTom is active. Discovery runs with Search API and your filters.",
@@ -233,7 +235,7 @@
       integrationTitle: "Integration status",
       mapsActiveHint: "Google Maps discovery is active via Google Places API.",
       osmActiveHint: "OpenStreetMap discovery is active via Nominatim and Overpass.",
-      redditActiveHint: "Reddit discovery is active via public JSON endpoints.",
+      redditActiveHint: "Reddit discovery is active with official OAuth (public fallback).",
       foursquareActiveHint: "Foursquare discovery is active via Places API.",
       yelpActiveHint: "Yelp discovery is active via official Fusion API.",
       tomtomActiveHint: "TomTom discovery is active via Search API.",
@@ -357,6 +359,8 @@
       credential_param: "user_agent",
       credential_env: "REDDIT_USER_AGENT",
       credential_label: "Reddit User-Agent",
+      oauth_envs: ["REDDIT_CLIENT_ID", "REDDIT_CLIENT_SECRET"],
+      oauth_configured: false,
       configured: true,
     },
   };

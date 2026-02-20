@@ -19,6 +19,7 @@ Importante:
    - `TELEGRAM_STRING_SESSION` (recomendado en Vercel/web para evitar login interactivo)
    - `GOOGLE_MAPS_API_KEY` (para Google Maps)
    - `REDDIT_USER_AGENT` (recomendado para Reddit)
+   - `REDDIT_CLIENT_ID` y `REDDIT_CLIENT_SECRET` (recomendado en Vercel para OAuth oficial)
 2. Targets en `config.json`:
    - `targets`: `@canal` o `https://t.me/canal`
    - `scrape`: limites, pausas, retries.
@@ -96,6 +97,7 @@ Nota:
 ## 8) Matriz rapida de capacidades por fuente
 - Google Maps: rating `si`, verificado `si`, web `si`, telefono `si`, ubicacion requerida `no`.
 - Reddit: rating `no`, verificado `si`, web `si`, telefono `si`, ubicacion requerida `no`.
+  Usa OAuth oficial si defines `REDDIT_CLIENT_ID` + `REDDIT_CLIENT_SECRET`.
 
 ## 9) Nota para Vercel
 - En serverless, el sistema usa `/tmp` por defecto.

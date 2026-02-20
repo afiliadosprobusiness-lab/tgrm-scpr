@@ -65,6 +65,8 @@
   - `TELEGRAM_STRING_SESSION` (optional, recommended for serverless/web non-interactive Telegram auth)
   - `GOOGLE_MAPS_API_KEY` (required for Google Maps discovery)
   - `REDDIT_USER_AGENT` (recommended for Reddit discovery requests)
+  - `REDDIT_CLIENT_ID` (optional, recommended for Reddit OAuth in serverless)
+  - `REDDIT_CLIENT_SECRET` (optional, recommended for Reddit OAuth in serverless)
   - `FLASK_SECRET_KEY` (recommended for web UI)
   - `SCRAPER_DB_PATH` (optional path override)
   - `SCRAPER_CONFIG_PATH` (optional path override)
@@ -117,4 +119,4 @@
 - Active source connectors:
   - `telegram` (scrape workflow)
   - `google_maps` (discovery via Google Places API)
-  - `reddit` (discovery via public JSON endpoints)
+  - `reddit` (discovery via OAuth when configured, with public JSON fallback)

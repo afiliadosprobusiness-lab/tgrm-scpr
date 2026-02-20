@@ -104,6 +104,7 @@ Validation rules:
   - `only_verified`
   - `limit`
   - `credentials` (optional map, e.g. `{ "api_key": "..." }`)
+    - reddit supports optional: `user_agent`, `client_id`, `client_secret`
 - Response JSON:
   - `status`
   - `source`
@@ -163,6 +164,8 @@ Validation rules:
 - `TELEGRAM_STRING_SESSION` (recommended for Telegram web/serverless auth without interactive code prompt)
 - `GOOGLE_MAPS_API_KEY` (required for Google Maps discovery)
 - `REDDIT_USER_AGENT` (recommended for Reddit discovery)
+- `REDDIT_CLIENT_ID` (optional, enables Reddit OAuth)
+- `REDDIT_CLIENT_SECRET` (optional, enables Reddit OAuth)
 - `SCRAPER_DB_PATH` (optional DB path override)
 - `SCRAPER_CONFIG_PATH` (optional config path override)
 - `SCRAPER_ENV_FILE` (optional env file path override)
@@ -239,3 +242,8 @@ Validation rules:
 - Cambio: simplificacion multi-fuente a solo `telegram`, `google_maps` y `reddit`, y limpieza de paneles informativos secundarios en dashboard.
 - Tipo: non-breaking
 - Impacto: reduce complejidad operativa y enfoca la interfaz en flujos principales.
+
+- 2026-02-20
+- Cambio: Reddit discovery ahora soporta OAuth oficial (`REDDIT_CLIENT_ID` + `REDDIT_CLIENT_SECRET`) con fallback al endpoint publico.
+- Tipo: non-breaking
+- Impacto: mejora confiabilidad en entornos serverless donde el endpoint publico puede devolver 403.

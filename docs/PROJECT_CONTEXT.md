@@ -36,7 +36,7 @@ Operational summary for the Telegram scraper.
 ## Source status
 - Telegram: active backend scraping module.
 - Google Maps: active discovery connector (Google Places API).
-- Reddit: active discovery connector (public JSON).
+- Reddit: active discovery connector (OAuth when configured, public JSON fallback).
 
 ## Incremental state
 - last processed id is persisted per target in SQLite (`targets.last_message_id`).
